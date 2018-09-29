@@ -30,7 +30,6 @@ void Lista::add(int info)
     {
         primeiro = new No();
         primeiro->setInfo(info);
-        primeiro->setProx(NULL);
     }
     else
     {
@@ -43,10 +42,10 @@ void Lista::add(int info)
         }
         if(p->getInfo() != info)
         {
-            p = new No();
-            p->setInfo();
-            p->setProx(ant->getProx());
-            ant->setProx(p);
+            No *aux = new No();
+            aux->setInfo(info);
+            aux->setProx(ant->getProx());
+            ant->setProx(aux);
             tam++;
         }
     }

@@ -12,7 +12,7 @@ ListaAdjacente::~ListaAdjacente()
 {
     if(primeiro != NULL)
     {
-        No *aux;
+        NoAdj *aux;
         while(primeiro != NULL)
         {
             aux = primeiro->getProx();

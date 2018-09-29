@@ -14,7 +14,6 @@ public:
     No *getProx();
     void addAresta(No* vertice);
     void setProx(No *prox);
-    No *getProx();
 
 private:
     int info;

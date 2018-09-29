@@ -29,3 +29,7 @@ No* No::getProx()
     return prox;
 }
 
+void No::setProx(No* prox)
+{
+    this->prox = prox;
+}

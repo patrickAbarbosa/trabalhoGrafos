@@ -1,7 +1,7 @@
 #ifndef NOADJ_H_INCLUDED
 #define NOADJ_H_INCLUDED
 #include <cstddef>
-#include "No.h"vou su
+#include "No.h"
 
 
 class No;
@@ -14,9 +14,9 @@ public:
     void setInfo(No* p){info = p;}
     No* getInfo(){return info;}
     NoAdj *getProx(){return prox;}
-    void setPeso(int peso){return peso;}
+    void setPeso(int peso){this->peso = peso;}
     int getPeso(){return peso;}
-    void setPeso(int peso){this->peso = peso};
+
 
 private:
     No *info;

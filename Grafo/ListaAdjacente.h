@@ -8,8 +8,9 @@ class ListaAdjacente
 public:
     ListaAdjacente();
     ~ListaAdjacente();
-    void add(No *vertice);
+    void add(No *vertice, int peso);
     void remove(No *vertice);
+    No* get(int k);
 
 private:
     NoAdj *primeiro;
