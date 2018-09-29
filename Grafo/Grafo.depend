@@ -84,3 +84,19 @@
 	"Vertice.h"
 	<list>
 
+1538251538 source:/home/alexander/Documents/Aulas/Grafos/Trabalhos/trabalhoGrafos/Grafo/main.cpp
+	<iostream>
+	<list>
+
+1538251538 source:/home/alexander/Documents/Aulas/Grafos/Trabalhos/trabalhoGrafos/Grafo/Vertice.cpp
+	<iostream>
+	"Vertice.h"
+
+1538251538 /home/alexander/Documents/Aulas/Grafos/Trabalhos/trabalhoGrafos/Grafo/Vertice.h
+	"Aresta.h"
+	<list>
+
+1538251538 /home/alexander/Documents/Aulas/Grafos/Trabalhos/trabalhoGrafos/Grafo/Aresta.h
+	"Vertice.h"
+	<list>
+
