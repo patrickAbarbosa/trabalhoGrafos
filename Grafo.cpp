@@ -40,15 +40,13 @@ void Grafo::removerVertice(int info){
 
 void Grafo::adicionarAresta(int infoA, int infoB, float peso){
     Vertice *extremidade = busca(infoB);
+    Vertice *origem = busca(infoA);
     // infoB não encontrado
-    if(extremidade == NULL){
+    if(extremidade == NULL && origem == NULL){
         return;
     }
-    for(list<Vertice>::iterator it=this->vertices.begin() ; it != this->vertices.end(); ++it){
-        if(it->getInfo() == infoA) {
-            it->adicionarAresta(extremidade, peso);
-        }
-    }
+    extremidade->adicionarAresta(origem, peso);
+    origem->adicionarAresta(extremidade, peso);
 }
 
 void Grafo::removerAresta(int infoA, int infoB){
