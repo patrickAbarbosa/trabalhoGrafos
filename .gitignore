@@ -2,3 +2,6 @@ bin/
 obj/
 *.layout
 *.depend
+.idea/
+cmake-build-debug/
+CMakeLists.txt

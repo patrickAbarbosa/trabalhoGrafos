@@ -13,6 +13,7 @@ class Vertice;
 
 class Grafo {
 private:
+    int tam;
     list<Vertice> Vertices;
 
 };
