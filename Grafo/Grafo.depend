@@ -22,7 +22,7 @@
 	<cstddef>
 	"No.h"
 
-1538181250 source:/home/home/Documents/trabalhoGrafos/Grafo/main.cpp
+1538247082 source:/home/home/Documents/trabalhoGrafos/Grafo/main.cpp
 	<iostream>
 
 1538195308 source:/home/home/Documents/trabalhoGrafos/Grafo/No.cpp
@@ -30,7 +30,7 @@
 	<cstddef>
 	"No.h"
 
-1538196172 /home/home/Documents/trabalhoGrafos/Grafo/No.h
+1538196285 /home/home/Documents/trabalhoGrafos/Grafo/No.h
 	"ListaAdjacente.h"
 
 1538194284 /home/home/Documents/trabalhoGrafos/Grafo/ListaAdjacente.h
@@ -41,7 +41,7 @@
 	<cstddef>
 	"No.h"
 
-1538194898 source:/home/home/Documents/trabalhoGrafos/Grafo/Lista.cpp
+1538245877 source:/home/home/Documents/trabalhoGrafos/Grafo/Lista.cpp
 	<iostream>
 	"Lista.h"
 	"No.h"
@@ -49,7 +49,13 @@
 1538192356 /home/home/Documents/trabalhoGrafos/Grafo/Lista.h
 	"No.h"
 
-1538194307 source:/home/home/Documents/trabalhoGrafos/Grafo/ListaAdjacente.cpp
+1538195624 source:/home/home/Documents/trabalhoGrafos/Grafo/ListaAdjacente.cpp
 	"ListaAdjacente.h"
 	<iostream>
+
+1538247064 source:/home/home/Documents/trabalhoGrafos/Grafo/Vertice.cpp
+	<iostream>
+	"Vertice.h"
+
+1538247015 /home/home/Documents/trabalhoGrafos/Grafo/Vertice.h
 
