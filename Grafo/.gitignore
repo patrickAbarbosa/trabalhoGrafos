@@ -1,3 +1,5 @@
 .idea/
 *.layout
 cmake-build-debug/
+obj/*
+bin/
