@@ -11,13 +11,13 @@ private:
     float peso;
     Vertice *extremidade;
 public:
-//    Aresta();
-//    ~Aresta();
+    Aresta(){};
+    ~Aresta(){};
 
-//    void setInfo(Vertice* p){info = p;}
-//    Vertice* getInfo(){return info;}
-//    void setPeso(float peso){this->peso = peso;}
-//    float getPeso(){return peso;}
+    void setInfo(Vertice* p){extremidade = p;}
+    Vertice* getInfo(){return extremidade;}
+    void setPeso(float peso){this->peso = peso;}
+    float getPeso(){return peso;}
 };
 
 

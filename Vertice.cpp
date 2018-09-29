@@ -33,3 +33,38 @@ float Vertice::getPeso()
 {
     return peso;
 }
+
+void Vertice::adicionarAresta(Vertice *extremidade, float peso)
+{
+    Aresta aresta;
+    aresta.setPeso(peso);
+    aresta.setInfo(extremidade);
+    arestas.push_back(aresta);
+}
+
+void Vertice::removerAresta(Vertice *extremidade)
+{
+    for(list<Aresta>::iterator it = arestas.begin(); it != arestas.end(); )
+    {
+        if(it->getInfo() == extremidade)
+            it = arestas.erase(it);
+        else
+            it++;
+    }
+}
+
+void Vertice::removerAresta(int extremidade)
+{
+    for(list<Aresta>::iterator it = arestas.begin(); it != arestas.end(); )
+    {
+        if(it->getInfo()->getInfo() == extremidade)
+            it = arestas.erase(it);
+        else
+            it++;
+    }
+}
+
+int Vertice::getGrau()
+{
+    return arestas.size();
+}
