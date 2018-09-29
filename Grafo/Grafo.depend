@@ -1,0 +1,24 @@
+# depslib dependency file v1.0
+1538181250 source:/home/home/Documents/Grafo/main.cpp
+	<iostream>
+
+1538177749 source:/home/home/Documents/Grafo/No.cpp
+	<iostream>
+	<cstddef>
+	"No.h"
+
+1538181271 /home/home/Documents/Grafo/No.h
+	"ListaAdjacente.h"
+
+1538177463 source:/home/home/Documents/Grafo/ListaAdjacente.cpp
+	"ListaAdjacente.h"
+	<iostream>
+
+1538181232 /home/home/Documents/Grafo/ListaAdjacente.h
+	"NoAdj.h"
+	"No.h"
+
+1538179980 /home/home/Documents/Grafo/NoAdj.h
+	<cstddef>
+	"No.h"
+
