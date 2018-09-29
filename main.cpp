@@ -6,6 +6,7 @@ using namespace std;
 
 int main()
 {
+    /*
     Grafo g;
     g.adicionarVertice(1, 10);
     g.adicionarVertice(2, 20);
@@ -14,5 +15,10 @@ int main()
     g.adicionarAresta(1, 3, 100);
     g.adicionarAresta(3, 2, 100);
     g.imprimir();
+    */
+
+    Grafo a("grafo.txt");
+    cout << "Tamanho da lista " << a.getTam();
+    a.imprimir();
     return 0;
 }

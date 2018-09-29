@@ -7,6 +7,7 @@
 #include "Vertice.h"
 #include <list>
 #include <string>
+#include <fstream>
 
 using namespace std;
 
@@ -15,10 +16,10 @@ class Vertice;
 class Grafo {
     private:
         int tam;
-        string arquivo;
+        fstream arquivo;
         list<Vertice> vertices;
     public:
-        Grafo(string arquivo);
+        Grafo(string diretorio);
         Grafo();
         ~Grafo();
         void imprimir();
