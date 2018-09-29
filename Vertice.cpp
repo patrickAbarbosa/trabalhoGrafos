@@ -12,6 +12,7 @@ Vertice::Vertice()
 Vertice::~Vertice()
 {
     // Destruindo Vertice e suas arestas
+    arestas.clear();
 }
 
 void Vertice::setInfo(int info)
