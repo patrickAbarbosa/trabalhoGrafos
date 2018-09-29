@@ -71,3 +71,9 @@ Vertice* Grafo::busca(int info){
     }
     return NULL;
 }
+
+void Grafo::imprimir() {
+    for (list<Vertice>::iterator it=this->vertices.begin() ; it != this->vertices.end(); ++it){
+        it->imprimir();
+    }
+}

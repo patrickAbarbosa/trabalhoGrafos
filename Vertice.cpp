@@ -12,6 +12,7 @@ Vertice::Vertice()
 Vertice::~Vertice()
 {
     // Destruindo Vertice e suas arestas
+    arestas.clear();
 }
 
 void Vertice::setInfo(int info)
@@ -57,7 +58,7 @@ void Vertice::removerAresta(int extremidade)
 {
     for(list<Aresta>::iterator it = arestas.begin(); it != arestas.end(); )
     {
-        if(it->getInfo()->getInfo() == extremidade)
+        if(it->getInfo()->info == extremidade)
             it = arestas.erase(it);
         else
             it++;
@@ -67,4 +68,12 @@ void Vertice::removerAresta(int extremidade)
 int Vertice::getGrau()
 {
     return arestas.size();
+}
+
+void Vertice::imprimir()
+{
+    for(list<Aresta>::iterator it = arestas.begin(); it != arestas.end(); it++)
+    {
+        cout << "(" << info << ", " << peso << ") (" << it->getInfo()->info << ", " << it->getInfo()->peso << ") " << it->getPeso() << endl;
+    }
 }

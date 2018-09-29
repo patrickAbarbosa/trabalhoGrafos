@@ -21,6 +21,7 @@ class Grafo {
         Grafo(string arquivo);
         Grafo();
         ~Grafo();
+        void imprimir();
         Vertice* busca(int info);
         void adicionarVertice(int info, float peso);
         void removerVertice(int info);

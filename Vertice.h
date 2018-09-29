@@ -20,6 +20,7 @@ public:
     void removerAresta(Vertice *extremidade);
     void removerAresta(int extremidade);
     int getGrau();
+    void imprimir();
 
 private:
     // informacao do vertice
