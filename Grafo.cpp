@@ -14,7 +14,10 @@ Grafo::Grafo(string arquivo){
 }
 
 Grafo::Grafo(){}
-Grafo::~Grafo(){};
+
+Grafo::~Grafo(){
+    vertices.clear();
+};
 
 void Grafo::adicionarVertice(int info, float peso){
     if(busca(info) != NULL){
@@ -34,6 +37,7 @@ void Grafo::removerVertice(int info){
         }
     }
 }
+
 void Grafo::adicionarAresta(int infoA, int infoB, float peso){
     Vertice *extremidade = busca(infoB);
     // infoB não encontrado
@@ -46,6 +50,7 @@ void Grafo::adicionarAresta(int infoA, int infoB, float peso){
         }
     }
 }
+
 void Grafo::removerAresta(int infoA, int infoB){
     busca(infoA)->removerAresta(infoB);
 
@@ -53,9 +58,11 @@ void Grafo::removerAresta(int infoA, int infoB){
 unsigned int Grafo::getTam(){
     return (unsigned  int) vertices.size();
 }
+
 unsigned int  Grafo::getGrau(int info){
     return (unsigned int) busca(info)->getGrau();
 }
+
 Vertice* Grafo::busca(int info){
     for (list<Vertice>::iterator it=this->vertices.begin() ; it != this->vertices.end(); ++it){
         if(it->getInfo() == info) {
