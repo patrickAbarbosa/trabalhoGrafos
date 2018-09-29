@@ -32,13 +32,9 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="Lista.cpp" />
-		<Unit filename="Lista.h" />
-		<Unit filename="ListaAdjacente.cpp" />
-		<Unit filename="ListaAdjacente.h" />
-		<Unit filename="No.cpp" />
-		<Unit filename="No.h" />
-		<Unit filename="NoAdj.h" />
+		<Unit filename="Aresta.h" />
+		<Unit filename="Vertice.cpp" />
+		<Unit filename="Vertice.h" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<envvars />

@@ -1,5 +1,8 @@
 #ifndef ARESTA_H_INCLUDED
 #define ARESTA_H_INCLUDED
+#include "Vertice.h"
+
+class Vertice;
 
 class Aresta
 {

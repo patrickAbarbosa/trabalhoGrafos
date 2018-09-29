@@ -57,5 +57,9 @@
 	<iostream>
 	"Vertice.h"
 
-1538247015 /home/home/Documents/trabalhoGrafos/Grafo/Vertice.h
+1538249583 /home/home/Documents/trabalhoGrafos/Grafo/Vertice.h
+	"Aresta.h"
+
+1538249573 /home/home/Documents/trabalhoGrafos/Grafo/Aresta.h
+	"Vertice.h"
 
