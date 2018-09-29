@@ -1,0 +1,12 @@
+cmake_minimum_required(VERSION 3.12)
+project(Grafo)
+
+set(CMAKE_CXX_STANDARD 14)
+
+include_directories(.)
+
+add_executable(Grafo
+        Aresta.h
+        main.cpp
+        Vertice.cpp
+        Vertice.h Grafo.cpp Grafo.h)
