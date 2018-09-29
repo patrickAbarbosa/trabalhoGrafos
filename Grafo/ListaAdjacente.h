@@ -14,6 +14,7 @@ public:
 
 private:
     NoAdj *primeiro;
+    int tam;
 };
 
 #endif // LISTAADJACENTE_H_INCLUDED

@@ -33,3 +33,8 @@ void No::setProx(No* prox)
 {
     this->prox = prox;
 }
+
+void No::addAresta(No *vertice, float peso)
+{
+    lista->add(vertice, peso);
+}

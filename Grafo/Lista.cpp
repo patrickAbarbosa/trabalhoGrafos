@@ -10,6 +10,7 @@ Lista::Lista()
     tam = 0;
 }
 
+// Apaga toda a lista de vertices
 Lista::~Lista()
 {
     if(primeiro != NULL)
@@ -24,12 +25,14 @@ Lista::~Lista()
     }
 }
 
+// Cria e adiciona um vertice a lista
 void Lista::add(int info)
 {
     if(primeiro == NULL)
     {
         primeiro = new No();
         primeiro->setInfo(info);
+        tam++;
     }
     else
     {
@@ -51,6 +54,7 @@ void Lista::add(int info)
     }
 }
 
+// Busca o o vertice que tenha o id passado e o exclui
 void Lista::remove(int info)
 {
     if(primeiro != NULL)
@@ -74,9 +78,10 @@ void Lista::remove(int info)
             cout << "Nao e possivel remover! Vertice nao encontrado." << endl;
     }
     else
-        cout << "Nao a vertices!" << endl;
+        cout << "Nao ha vertices!" << endl;
 }
 
+// Busca e retorna o vertice na posicao k
 No* Lista::get(int k)
 {
     No *p = primeiro;
@@ -87,6 +92,7 @@ No* Lista::get(int k)
     return p;
 }
 
+// Retorna o numero de vertices
 int Lista::getTam()
 {
     return tam;

@@ -6,8 +6,10 @@ using namespace std;
 ListaAdjacente::ListaAdjacente()
 {
     primeiro = NULL;
+    tam = 0;
 }
 
+// Apaga toda a lista de vertices adjacente
 ListaAdjacente::~ListaAdjacente()
 {
     if(primeiro != NULL)
@@ -22,28 +24,48 @@ ListaAdjacente::~ListaAdjacente()
     }
 }
 
+// Adiciona vertice em ordem crescente com a id
+
 void ListaAdjacente::add(No *vertice, int peso)
 {
     if(primeiro == NULL)
     {
         primeiro = new NoAdj();
         primeiro->setInfo(vertice);
-
-
+        primeiro->setPeso(peso);
     }
-}
-
-bool testaPeso(int peso)
-{
-    if(peso < 1)
+    else
     {
-        cout << "Peso da aresta invalido!" << endl;
-        cout << "Peso alterado para 1" << endl;
-        return 0;
+        NoAdj *ant = NULL;
+        NoAdj *p = primeiro;
+
+        while(p != NULL && p->getInfo()->getInfo() < vertice->getInfo())
+        {
+            ant = p;
+            p = p->getProx();
+        }
+
+        if(p->getInfo()->getInfo() != vertice->getInfo())
+        {
+            NoAdj* aux = new NoAdj();
+            aux->setInfo(vertice);
+            aux->setPeso(peso);
+            if(p == primeiro)
+            {
+                aux->setProx(p);
+                primeiro = aux;
+            }
+            else
+            {
+                aux->setProx(ant->getProx());
+                ant->setProx(aux);
+            }
+            tam++;
+        }
     }
-    return 1;
 }
 
+// Busca pelo indice
 No* ListaAdjacente::get(int k)
 {
     int i = 0;
