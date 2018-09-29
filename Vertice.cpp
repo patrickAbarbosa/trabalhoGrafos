@@ -53,6 +53,17 @@ void Vertice::removerAresta(Vertice *extremidade)
     }
 }
 
+void Vertice::removerAresta(int extremidade)
+{
+    for(list<Aresta>::iterator it = arestas.begin(); it != arestas.end(); )
+    {
+        if(it->getInfo()->getInfo() == extremidade)
+            it = arestas.erase(it);
+        else
+            it++;
+    }
+}
+
 int Vertice::getGrau()
 {
     return arestas.size();
