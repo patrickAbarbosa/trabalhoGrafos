@@ -1,8 +1,0 @@
-.idea/
-Grafo/.idea/
-*.layout
-Grafo/*.layout
-cmake-build-debug/
-Grafo/cmake-build-debug/
-Grafo/bin/
-Grafo/obj/
