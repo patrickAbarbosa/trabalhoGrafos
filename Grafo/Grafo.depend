@@ -63,3 +63,24 @@
 1538249573 /home/home/Documents/trabalhoGrafos/Grafo/Aresta.h
 	"Vertice.h"
 
+1538249837 source:/home/igorphelype/projects/trabalhoGrafos/Grafo/main.cpp
+	<iostream>
+	<list>
+
+1538247502 source:/home/igorphelype/projects/trabalhoGrafos/Grafo/Vertice.cpp
+	<iostream>
+	"Vertice.h"
+
+1538249823 /home/igorphelype/projects/trabalhoGrafos/Grafo/Vertice.h
+	"Aresta.h"
+
+1538249823 /home/igorphelype/projects/trabalhoGrafos/Grafo/Aresta.h
+	"Vertice.h"
+
+1538249837 source:/home/igorphelype/projects/trabalhoGrafos/Grafo/Grafo.cpp
+	"Grafo.h"
+
+1538249837 /home/igorphelype/projects/trabalhoGrafos/Grafo/Grafo.h
+	"Vertice.h"
+	<list>
+

@@ -1,6 +1,9 @@
 #ifndef VERTICE_H_INCLUDED
 #define VERTICE_H_INCLUDED
 #include "Aresta.h"
+#include <list>
+
+using namespace std;
 
 class Aresta;
 
@@ -15,8 +18,11 @@ public:
     float getPeso();
 
 private:
-    int info; // informacao do vertice
+    // informacao do vertice
+    int info;
     float peso;
+    // lista das arestas deste nó
+    list<Aresta> arestas;
     //vetor de aresta
 };
 

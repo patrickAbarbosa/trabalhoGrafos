@@ -9,4 +9,4 @@ add_executable(Grafo
         Aresta.h
         main.cpp
         Vertice.cpp
-        Vertice.h Grafo.cpp Grafo.h)
+        Vertice.h Grafo.cpp Grafo.h Aresta.cpp)

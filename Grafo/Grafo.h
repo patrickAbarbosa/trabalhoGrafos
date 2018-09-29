@@ -1,10 +1,11 @@
 //
 // Created by igorphelype on 29/09/18.
 //
-#include "Vertice.h";
-#include <list>
 #ifndef GRAFO_GRAFO_H
 #define GRAFO_GRAFO_H
+
+#include "Vertice.h"
+#include <list>
 
 using namespace std;
 
