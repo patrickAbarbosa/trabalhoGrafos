@@ -36,6 +36,8 @@
 		<Unit filename="Aresta.h" />
 		<Unit filename="Grafo.cpp" />
 		<Unit filename="Grafo.h" />
+		<Unit filename="Guloso.cpp" />
+		<Unit filename="Guloso.h" />
 		<Unit filename="Vertice.cpp" />
 		<Unit filename="Vertice.h" />
 		<Unit filename="main.cpp" />
