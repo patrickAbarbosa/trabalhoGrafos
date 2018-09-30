@@ -2,22 +2,21 @@
 #include <list>
 #include "Grafo.h"
 #include "Guloso.h"
-//#include <chrono>
+#include <chrono>
 
 using namespace std;
 //using namespace chrono;
 
 int main()
 {
-<<<<<<< HEAD
+
     __int64_t start = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
     Grafo a("grafoA.txt");
-=======
+
     //__int64_t start = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 
 
-    Grafo a("grafo.txt");
->>>>>>> algoritmoguloso
+    //Grafo a("grafo.txt");
     cout << "Tamanho da lista " << a.getTam() << endl;
     a.imprimir();
 

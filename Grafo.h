@@ -32,8 +32,7 @@ class Grafo {
         list<Vertice>::iterator final();
         unsigned int getTam(); //vertices.size();
         unsigned int  getGrau(int info);
-        list<Vertice>::iterator inicio();
-        list<Vertice>::iterator final();
+
 };
 
 
