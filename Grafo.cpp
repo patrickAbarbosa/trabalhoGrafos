@@ -69,7 +69,7 @@ void Grafo::adicionarAresta(int infoA, int infoB, float peso){
     Vertice *extremidade = busca(infoB);
     Vertice *origem = busca(infoA);
     // infoB não encontrado
-    if(extremidade == NULL && origem == NULL){
+    if(extremidade == NULL || origem == NULL){
         return;
     }
     extremidade->adicionarAresta(origem, peso);
