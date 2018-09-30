@@ -11,7 +11,7 @@
 using namespace std;
 
 Grafo::Grafo(string diretorio){
-    arquivo.open(diretorio);
+    arquivo.open(diretorio.c_str());
     if(!arquivo.is_open())
         cout << "Nao foi possivel abrir o arquivo!" << endl;
     else
@@ -22,32 +22,21 @@ Grafo::Grafo(string diretorio){
         int contaLinha = 0;
 
         arquivo >> tam;
-        cout << tam << endl;
         while(!arquivo.eof())
         {
-            a = b = -1;
-            c = -1;
             if(contaLinha < tam)
             {
                 arquivo >> a >> c;
-                cout << "aqui "<< endl;
-                if(b == -1)
-                    adicionarVertice(a, 1);
-                else
-                    adicionarVertice(a, c);
+                adicionarVertice(a, c);
             }
             else
             {
                 arquivo >> a >> b >> c;
-                cout << "aresta "<< endl;
-                if(c == -1)
-                    adicionarAresta(a, b, 1);
-                else
-                    adicionarAresta(a, b, c);
-                cout << "voltou" << endl;
+                adicionarAresta(a, b, c);
             }
             contaLinha++;
         }
+        arquivo.close();
     }
 }
 
@@ -77,7 +66,6 @@ void Grafo::removerVertice(int info){
 }
 
 void Grafo::adicionarAresta(int infoA, int infoB, float peso){
-    cout << "funcao a = "<< infoA << " b:" << infoB << "p:"<< peso <<endl;
     Vertice *extremidade = busca(infoB);
     Vertice *origem = busca(infoA);
     // infoB não encontrado

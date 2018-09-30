@@ -18,7 +18,7 @@ int main()
     */
 
     Grafo a("grafo.txt");
-    cout << "Tamanho da lista " << a.getTam();
+    cout << "Tamanho da lista " << a.getTam() << endl;
     a.imprimir();
     return 0;
 }
