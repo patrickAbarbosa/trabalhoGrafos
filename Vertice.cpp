@@ -83,4 +83,8 @@ list<Aresta>::iterator Vertice::inicio(){
 }
 list<Aresta>::iterator Vertice::final(){
     return arestas.end();
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> algoritmoguloso
