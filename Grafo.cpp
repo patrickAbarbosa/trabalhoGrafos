@@ -102,3 +102,11 @@ void Grafo::imprimir() {
         it->imprimir();
     }
 }
+
+list<Vertice>::iterator Grafo::inicio(){
+    return this->vertices.begin();
+}
+
+list<Vertice>::iterator Grafo::final(){
+    return this->vertices.end();
+}

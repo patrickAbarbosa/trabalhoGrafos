@@ -30,6 +30,8 @@ class Grafo {
         void removerAresta(int infoA, int infoB);
         unsigned int getTam(); //vertices.size();
         unsigned int  getGrau(int info);
+        list<Vertice>::iterator inicio();
+        list<Vertice>::iterator final();
 };
 
 

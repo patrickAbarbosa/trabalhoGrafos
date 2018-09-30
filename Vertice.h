@@ -21,6 +21,8 @@ public:
     void removerAresta(int extremidade);
     int getGrau();
     void imprimir();
+    list<Aresta>::iterator inicio();
+    list<Aresta>::iterator final();
 
 private:
     // informacao do vertice
