@@ -11,6 +11,12 @@ using namespace std;
 
 class Guloso
 {
+    private:
+        list<int> gerarListSolucao(list<Vertice*> vertices);
+        list<Vertice*> algoritmoGuloso(list<Vertice*> &C, int pesoTotal);
+        Vertice* seleciona(list<Vertice*> &C);
+        bool viavel(list<Vertice*> &S, Vertice *x);
+
     public:
         Guloso();
         ~Guloso();
