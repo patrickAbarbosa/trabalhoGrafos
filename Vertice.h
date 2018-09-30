@@ -18,6 +18,8 @@ public:
     float getPeso();
     void adicionarAresta(Vertice *extremidade, float peso);
     void removerAresta(Vertice *extremidade);
+    list<Aresta>::iterator inicio();
+    list<Aresta>::iterator final();
     void removerAresta(int extremidade);
     int getGrau();
     void imprimir();
