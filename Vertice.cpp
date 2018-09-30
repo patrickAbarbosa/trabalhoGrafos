@@ -77,3 +77,10 @@ void Vertice::imprimir()
         cout << "(" << info << ", " << peso << ") (" << it->getInfo()->info << ", " << it->getInfo()->peso << ") " << it->getPeso() << endl;
     }
 }
+
+list<Aresta>::iterator Vertice::inicio(){
+    return arestas.begin();
+}
+list<Aresta>::iterator Vertice::final(){
+    return arestas.end();
+}
