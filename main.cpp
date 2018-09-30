@@ -5,7 +5,7 @@
 #include <chrono>
 
 using namespace std;
-//using namespace chrono;
+using namespace chrono;
 
 int main()
 {
@@ -28,7 +28,7 @@ int main()
         cout << (*it) << ", ";
     }
 
-    //__int64_t end = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-    //cout << "It took" << start - end << "ms";
+    __int64_t end = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+    cout << "It took" << start - end << "ms";
     return 0;
 }
