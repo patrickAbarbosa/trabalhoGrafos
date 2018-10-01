@@ -9,19 +9,31 @@
 
 using namespace std;
 
+typedef struct
+{
+    list<int> indices;
+    list<Vertice*> vertices;
+    list<Aresta*> arestas;
+    float custo;
+    float custoTotal;
+}SolucaoGuloso;
+
 class Guloso
 {
     private:
-        list<int> gerarListSolucao(list<Vertice*> vertices);
-        list<Vertice*> algoritmoGuloso(list<Vertice*> &C, int pesoTotal);
-        Vertice* seleciona(list<Vertice*> &C);
-        bool viavel(list<Vertice*> &S, Vertice *x);
-
+        void algoritmoGuloso(list<Aresta*> &C, SolucaoGuloso &solucao);
+        void geraCandidatos(list<Aresta*> &arestas, list<Aresta*> &C, SolucaoGuloso &solucao);
+        void imprimirCandidatos(list<Aresta*> &C);
+        void imprimirSolucao(SolucaoGuloso &solucao);
+        void atualizaSolucao(SolucaoGuloso &solucao);
+        static bool ordenaPrimeirosCandidatos(Aresta *primeiro, Aresta *segundo);
+        static bool ordenaCandidatos(Aresta *primeiro, Aresta *segundo);
     public:
         Guloso();
         ~Guloso();
 
-        list<int> calcular(Grafo &grafo);
+        void calcular(Grafo &grafo, SolucaoGuloso &solucao);
+        void imprimir(SolucaoGuloso &solucao);
 };
 
 

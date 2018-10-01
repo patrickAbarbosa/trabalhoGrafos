@@ -24,8 +24,6 @@ public:
     list<Aresta>::iterator inicio();
     list<Aresta>::iterator final();
 
-
-
 private:
     // informacao do vertice
     int info;

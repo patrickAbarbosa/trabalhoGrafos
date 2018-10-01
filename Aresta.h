@@ -9,13 +9,16 @@ class Aresta
 private:
     // peso da aresta
     float peso;
+    Vertice *origem;
     Vertice *extremidade;
 public:
     Aresta(){};
     ~Aresta(){};
 
-    void setInfo(Vertice* p){extremidade = p;}
-    Vertice* getInfo(){return extremidade;}
+    void setExtremidade(Vertice* p){extremidade = p;}
+    Vertice* getExtremidade(){return extremidade;}
+    void setOrigem(Vertice* p){origem = p;}
+    Vertice* getOrigem(){return origem;}
     void setPeso(float peso){this->peso = peso;}
     float getPeso(){return peso;}
 };
