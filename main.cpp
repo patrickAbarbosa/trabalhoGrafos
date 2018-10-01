@@ -1,5 +1,6 @@
 #include <iostream>
 #include <list>
+#include <string>
 #include "Grafo.h"
 #include "Guloso.h"
 //#include <chrono>
@@ -7,20 +8,22 @@
 using namespace std;
 //using namespace chrono;
 
-int main()
+int main(int argc, char *argv[])
 {
-    //__int64_t start = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-    Grafo a("grafoSimples.txt");
-    cout << "Tamanho da lista " << a.getTam() << endl;
-    a.imprimir();
+    string arquivo = "grafo.txt";
+    if(argc > 1)
+        arquivo = string(argv[1]);
 
+    cout << "Carregando " << arquivo << "..." << endl;
+    Grafo a(arquivo);
+    cout << "Número de vértices: " << a.getTam() << endl;
+    //a.imprimir();
+
+    cout << "Buscando solução..." << endl;
     Guloso guloso;
     SolucaoGuloso solucao;
     guloso.calcular(a, solucao);
-    cout << "Solucao --------" << endl;
+    cout << "Solução" << endl;
     guloso.imprimir(solucao);
-
-    //__int64_t end = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
-    //cout << "It took" << start - end << "ms";
     return 0;
 }

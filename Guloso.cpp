@@ -38,6 +38,22 @@ void Guloso::calcular(Grafo &grafo, SolucaoGuloso &solucao)
 
     solucao.custo = solucao.custoTotal;
 
+    if(arestas.size() == 0)
+    {
+        Vertice *v = NULL;
+        for(list<Vertice>::iterator vertice = grafo.inicio(); vertice != grafo.final(); vertice++)
+        {
+            if(v == NULL || v->getPeso() > vertice->getPeso())
+                v = &*vertice;
+        }
+        if(v != NULL)
+        {
+            solucao.vertices.push_back(v);
+            atualizaSolucao(solucao);
+            return;
+        }
+    }
+
     // Executa o algoritmo guloso
     algoritmoGuloso(arestas, solucao);
 }
@@ -52,17 +68,23 @@ void Guloso::algoritmoGuloso(list<Aresta*> &arestas, SolucaoGuloso &solucao)
     while(C.size() > 0)
     {
         x = C.front();
-        if( (x->getExtremidade()->getPeso() - x->getPeso()) < 0)
-            break;
-        else if(solucao.vertices.size() == 0)
+        if(solucao.vertices.size() == 0)
         {
-            solucao.vertices.push_back(x->getOrigem());
+            if(x->getOrigem()->getPeso() > x->getExtremidade()->getPeso())
+                solucao.vertices.push_back(x->getOrigem());
+            else
+                solucao.vertices.push_back(x->getExtremidade());
         }
         else
         {
-            solucao.vertices.push_back(x->getExtremidade());
-            if(solucao.vertices.size() > 1)
-                solucao.arestas.push_back(x);
+            if( (x->getExtremidade()->getPeso() - x->getPeso()) < 0)
+                break;
+            else
+            {
+                solucao.vertices.push_back(x->getExtremidade());
+                if(solucao.vertices.size() > 1)
+                    solucao.arestas.push_back(x);
+            }
         }
         //imprimirSolucao(solucao);
 
@@ -148,13 +170,13 @@ void Guloso::imprimirSolucao(SolucaoGuloso &solucao)
 void Guloso::imprimir(SolucaoGuloso &solucao)
 {
     cout << "Custo: " << solucao.custo << endl;
-    cout << "Vertices: ";
+    cout << "Vertices (" << solucao.indices.size() << "): ";
     for (list<int>::iterator it = solucao.indices.begin() ; it != solucao.indices.end(); ++it)
     {
         cout << (*it) << ", ";
     }
     cout << endl;
-    cout << "Arestas: " << endl;
+    cout << "Arestas: (" << solucao.arestas.size() << ")" << endl;
     for (list<Aresta*>::iterator it = solucao.arestas.begin() ; it != solucao.arestas.end(); ++it)
     {
         cout << (*it)->getOrigem()->getInfo() << " -> " << (*it)->getExtremidade()->getInfo() << " | " << (*it)->getPeso() << endl;
