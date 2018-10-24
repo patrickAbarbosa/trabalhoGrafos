@@ -78,9 +78,9 @@ int main(int argc, char *argv[])
                 break;
             case 6:
                 cout << "Buscando solução..." << endl;
-                gulosoRandomizado.calcular(grafo, solucao, 0.1, 100);
-                cout << "--- Solucao Gulosa ----" << endl;
-                guloso.imprimir(solucao);
+                gulosoRandomizado.calcular(grafo, solucao, 0.2, 100);
+                cout << "--- Solucao Gulosa randomizada ----" << endl;
+                gulosoRandomizado.imprimir(solucao);
                 break;
             case 7:
                 cout <<"Quantidade de Vertices = " << grafo.getTam() << endl;

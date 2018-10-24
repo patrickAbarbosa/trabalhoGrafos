@@ -64,7 +64,12 @@ void GulosoRandomizado::calcular(Grafo &grafo, SolucaoGuloso &solucao, float alp
     SolucaoGuloso solucaoTemporaria;
     for(int i = 0; i < epocas; i++)
     {
-        solucaoTemporaria.custo = solucao.custoTotal;
+        solucaoTemporaria.custoTotal = solucao.custoTotal;
+        solucaoTemporaria.arestas.clear();
+        solucaoTemporaria.vertices.clear();
+        solucaoTemporaria.indices.clear();
+        solucaoTemporaria.custo = 0;
+
         algoritmoGulosoRandomizado(arestas, solucaoTemporaria, alpha);
         if(solucaoTemporaria.custo < solucao.custo)
         {
@@ -79,7 +84,6 @@ void GulosoRandomizado::copiaSolucao(SolucaoGuloso &src, SolucaoGuloso &dst)
     dst.vertices = src.vertices;
     dst.arestas = src.arestas;
     dst.custo = src.custo;
-    dst.custoTotal = src.custoTotal;
 }
 
 void GulosoRandomizado::algoritmoGulosoRandomizado(list<Aresta*> &arestas, SolucaoGuloso &solucao, float alpha)
@@ -95,11 +99,12 @@ void GulosoRandomizado::algoritmoGulosoRandomizado(list<Aresta*> &arestas, Soluc
     while(C.size() > 0)
     {
         limite = C.size() * alpha;
-        index = rand() % limite;
+        index = rand() % (limite + 1);
 
         std::list<Aresta*>::iterator it = C.begin();
         std::advance(it, index);
         x = *it;
+
 
         if(solucao.vertices.size() == 0)
         {
@@ -126,6 +131,7 @@ void GulosoRandomizado::algoritmoGulosoRandomizado(list<Aresta*> &arestas, Soluc
     }
 
     atualizaSolucao(solucao);
+    //imprimir(solucao);
 }
 
 void GulosoRandomizado::geraCandidatos(list<Aresta*> &arestas, list<Aresta*> &C, SolucaoGuloso &solucao)
