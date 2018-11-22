@@ -14,10 +14,12 @@ class Guloso
 {
     private:
         void algoritmoGuloso(list<Aresta*> &C, SolucaoGuloso &solucao);
+        void algoritmoGulosoRandomizado(list<Aresta*> &C, SolucaoGuloso &solucao, float alpha);
         void geraCandidatos(list<Aresta*> &arestas, list<Aresta*> &C, SolucaoGuloso &solucao);
         void imprimirCandidatos(list<Aresta*> &C);
         void imprimirSolucao(SolucaoGuloso &solucao);
         void atualizaSolucao(SolucaoGuloso &solucao);
+        void copiaSolucao(SolucaoGuloso &src, SolucaoGuloso &dst);
         static bool ordenaPrimeirosCandidatos(Aresta *primeiro, Aresta *segundo);
         static bool ordenaCandidatos(Aresta *primeiro, Aresta *segundo);
     public:
@@ -25,6 +27,7 @@ class Guloso
         ~Guloso();
 
         void calcular(Grafo &grafo, SolucaoGuloso &solucao);
+        void calcularRandomizado(Grafo &grafo, SolucaoGuloso &solucao, float alpha, int epocas);
         void imprimir(SolucaoGuloso &solucao);
 };
 
