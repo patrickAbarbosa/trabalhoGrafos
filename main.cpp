@@ -3,7 +3,6 @@
 #include <string>
 #include "Grafo.h"
 #include "Guloso.h"
-#include "GulosoRandomizado.h"
 //#include <chrono>
 
 using namespace std;
@@ -19,7 +18,6 @@ int main(int argc, char *argv[])
     Grafo grafo(arquivo);
 
     Guloso guloso;
-    GulosoRandomizado gulosoRandomizado;
     SolucaoGuloso solucao;
 
     int aux;
@@ -78,9 +76,9 @@ int main(int argc, char *argv[])
                 break;
             case 6:
                 cout << "Buscando solução..." << endl;
-                gulosoRandomizado.calcular(grafo, solucao, 0.2, 100);
+                guloso.calcularRandomizado(grafo, solucao, 0.2, 100);
                 cout << "--- Solucao Gulosa randomizada ----" << endl;
-                gulosoRandomizado.imprimir(solucao);
+                guloso.imprimir(solucao);
                 break;
             case 7:
                 cout <<"Quantidade de Vertices = " << grafo.getTam() << endl;

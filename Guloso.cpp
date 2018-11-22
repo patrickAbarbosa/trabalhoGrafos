@@ -58,6 +58,70 @@ void Guloso::calcular(Grafo &grafo, SolucaoGuloso &solucao)
     algoritmoGuloso(arestas, solucao);
 }
 
+void Guloso::calcularRandomizado(Grafo &grafo, SolucaoGuloso &solucao, float alpha, int epocas)
+{
+    solucao.arestas.clear();
+    solucao.vertices.clear();
+    solucao.indices.clear();
+    solucao.custo = 0;
+
+    if(grafo.getTam() == 0)
+        return;
+
+    // Cria conjunto de entrada vazio
+    list<Aresta*> arestas;
+
+    // Calcula o peso total e adiciona vértices ao conjunto de entrada
+    solucao.custoTotal = 0;
+    for(list<Vertice>::iterator vertice = grafo.inicio(); vertice != grafo.final(); vertice++)
+    {
+        solucao.custoTotal += vertice->getPeso();
+        for(list<Aresta>::iterator aresta = vertice->inicio(); aresta != vertice->final(); aresta++)
+        {
+            arestas.push_back(&*aresta);
+        }
+    }
+
+    solucao.custo = solucao.custoTotal;
+
+    if(arestas.size() == 0)
+    {
+        Vertice *v = NULL;
+        for(list<Vertice>::iterator vertice = grafo.inicio(); vertice != grafo.final(); vertice++)
+        {
+            if(v == NULL || v->getPeso() > vertice->getPeso())
+                v = &*vertice;
+        }
+        if(v != NULL)
+        {
+            solucao.vertices.push_back(v);
+            atualizaSolucao(solucao);
+            return;
+        }
+    }
+    if(alpha < 0)
+        alpha = 0;
+    else if(alpha > 1)
+        alpha = 1;
+
+    // Executa o algoritmo Guloso Randomizado
+    SolucaoGuloso solucaoTemporaria;
+    for(int i = 0; i < epocas; i++)
+    {
+        solucaoTemporaria.custoTotal = solucao.custoTotal;
+        solucaoTemporaria.arestas.clear();
+        solucaoTemporaria.vertices.clear();
+        solucaoTemporaria.indices.clear();
+        solucaoTemporaria.custo = 0;
+
+        algoritmoGulosoRandomizado(arestas, solucaoTemporaria, alpha);
+        if(solucaoTemporaria.custo < solucao.custo)
+        {
+            copiaSolucao(solucaoTemporaria, solucao);
+        }
+    }
+}
+
 void Guloso::algoritmoGuloso(list<Aresta*> &arestas, SolucaoGuloso &solucao)
 {
     Aresta *x; // Aresta de seleção
@@ -93,6 +157,62 @@ void Guloso::algoritmoGuloso(list<Aresta*> &arestas, SolucaoGuloso &solucao)
     }
 
     atualizaSolucao(solucao);
+}
+
+void Guloso::copiaSolucao(SolucaoGuloso &src, SolucaoGuloso &dst)
+{
+    dst.indices = src.indices;
+    dst.vertices = src.vertices;
+    dst.arestas = src.arestas;
+    dst.custo = src.custo;
+}
+
+void Guloso::algoritmoGulosoRandomizado(list<Aresta*> &arestas, SolucaoGuloso &solucao, float alpha)
+{
+    Aresta *x; // Aresta de seleção
+    list<Aresta*> C;
+    geraCandidatos(arestas, C, solucao);
+    //imprimirCandidatos(C);
+    int index = 0;
+    int limite;
+
+
+    while(C.size() > 0)
+    {
+        limite = C.size() * alpha;
+        index = rand() % (limite + 1);
+
+        std::list<Aresta*>::iterator it = C.begin();
+        std::advance(it, index);
+        x = *it;
+
+
+        if(solucao.vertices.size() == 0)
+        {
+            if(x->getOrigem()->getPeso() > x->getExtremidade()->getPeso())
+                solucao.vertices.push_back(x->getOrigem());
+            else
+                solucao.vertices.push_back(x->getExtremidade());
+        }
+        else
+        {
+            if( (x->getExtremidade()->getPeso() - x->getPeso()) < 0)
+                break;
+            else
+            {
+                solucao.vertices.push_back(x->getExtremidade());
+                if(solucao.vertices.size() > 1)
+                    solucao.arestas.push_back(x);
+            }
+        }
+        //imprimirSolucao(solucao);
+
+        geraCandidatos(arestas, C, solucao);
+        //imprimirCandidatos(C);
+    }
+
+    atualizaSolucao(solucao);
+    //imprimir(solucao);
 }
 
 void Guloso::geraCandidatos(list<Aresta*> &arestas, list<Aresta*> &C, SolucaoGuloso &solucao)
