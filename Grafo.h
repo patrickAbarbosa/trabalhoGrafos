@@ -5,6 +5,7 @@
 #define GRAFO_GRAFO_H
 
 #include "Vertice.h"
+#include "Solucao.h"
 #include <list>
 #include <string>
 #include <fstream>
@@ -32,6 +33,8 @@ class Grafo {
         list<Vertice>::iterator final();
         unsigned int getTam(); //vertices.size();
         unsigned int  getGrau(int info);
+
+        void draw(string fileName, SolucaoGuloso *solucao = NULL);
 
 };
 

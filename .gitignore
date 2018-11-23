@@ -5,3 +5,5 @@ obj/
 .idea/
 cmake-build-debug/
 CMakeLists.txt
+*.dot
+*.png

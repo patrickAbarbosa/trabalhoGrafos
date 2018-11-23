@@ -2,7 +2,6 @@
 #define SOLUCAO_H_
 
 #include <list>
-#include "Grafo.h"
 
 using namespace std;
 

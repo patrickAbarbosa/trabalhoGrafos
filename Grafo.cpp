@@ -4,8 +4,12 @@
 #include <iostream>
 #include <stddef.h>
 #include <string>
+#include <sstream>
+#include <cstdlib>
 #include "Grafo.h"
 #include "Vertice.h"
+#include "Solucao.h"
+#include "Aresta.h"
 #include <fstream>
 
 using namespace std;
@@ -109,4 +113,58 @@ list<Vertice>::iterator Grafo::inicio(){
 
 list<Vertice>::iterator Grafo::final(){
     return this->vertices.end();
+}
+
+void Grafo::draw(string fileName, SolucaoGuloso *solucao)
+{
+    cout << "Criando .dot" << endl;
+    stringstream ss;
+    ss << "strict graph {" << endl;
+    ss << "{" << endl;
+    ss << "node [style=filled,fillcolor=white];" << endl;
+    for(list<Vertice>::iterator vertice = inicio(); vertice != final(); vertice++)
+    {
+        if(solucao != NULL)
+        {
+            for(list<Vertice*>::iterator sVertice = solucao->vertices.begin(); sVertice != solucao->vertices.end(); sVertice++)
+            {
+                if(*sVertice == &(*vertice))
+                {
+                    ss << "\"" << vertice->getInfo() << " ( " << vertice->getPeso() << " )\" [fillcolor=red];" << endl;
+                    break;
+                }
+            }
+        }
+    }
+    ss << "}" << endl;
+    for(list<Vertice>::iterator vertice = inicio(); vertice != final(); vertice++)
+    {
+        for(list<Aresta>::iterator aresta = vertice->inicio(); aresta != vertice->final(); aresta++)
+        {
+            ss << "\"" << aresta->getOrigem()->getInfo() << " ( " << aresta->getOrigem()->getPeso() << " )\" -- \"" << aresta->getExtremidade()->getInfo() << " ( " << aresta->getExtremidade()->getPeso() << " )\" ";
+            ss << "[label=\"" << aresta->getPeso() << "\",weight=\"" << aresta->getPeso() << "\"";
+            if(solucao != NULL)
+            {
+                for(list<Aresta*>::iterator sAresta = solucao->arestas.begin(); sAresta != solucao->arestas.end(); sAresta++)
+                {
+                    if(*sAresta == &(*aresta))
+                    {
+                        ss << ",color=red,penwidth=2.0";
+                        break;
+                    }
+                }
+            }
+            ss << "];" << endl;
+        }
+    }
+    ss << "}";
+
+    cout << "Renderizando" << endl;
+    string dotFileName = fileName+".dot";
+    ofstream dot(dotFileName.c_str());
+    dot << ss.rdbuf();
+    dot.close();
+    string command = "dot -x -Goverlap=scale -Tpng -o"+fileName+" "+dotFileName+"; xdg-open "+fileName;
+    system(command.c_str());
+
 }
