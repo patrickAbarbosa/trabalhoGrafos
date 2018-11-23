@@ -13,7 +13,7 @@ __int64_t now() {
 }
 
 void printExecutionTime(__int64_t start, __int64_t end) {
-    cout << "Tempo de execução: " << (end - start) << " microseconds";
+    cout << "Tempo de execução: " << ((double) (end - start)/1000000.0) << " seconds";
 }
 
 int main(int argc, char *argv[])
