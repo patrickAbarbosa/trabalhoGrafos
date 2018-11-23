@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
                 break;
             case 6:
                 cout << "Buscando solução..." << endl;
-                guloso.calcularRandomizado(grafo, solucao, 0.2, 10);
+                guloso.calcularRandomizado(grafo, solucao, 0.2, 100);
                 cout << "--- Solucao Gulosa randomizada ----" << endl;
                 guloso.imprimir(solucao);
                 break;

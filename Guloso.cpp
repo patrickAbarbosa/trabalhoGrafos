@@ -200,7 +200,6 @@ void Guloso::calcularRandomizadoReativo(Grafo &grafo, SolucaoGuloso &solucao, fl
         cout << "Epoca: " << j << endl;
         for(int i = 0; i < bloco; i++)
         {
-            cout << "Bloco: " << i << endl;
             roleta = rand() % 100;
             sum = 0;
             n = 0;
@@ -211,6 +210,8 @@ void Guloso::calcularRandomizadoReativo(Grafo &grafo, SolucaoGuloso &solucao, fl
                     break;
                 n++;
             }
+
+            cout << "Bloco: " << i << ", Alpha: " << alpha[n] << endl;
 
             solucaoTemporaria.custoTotal = solucao.custoTotal;
             solucaoTemporaria.arestas.clear();
