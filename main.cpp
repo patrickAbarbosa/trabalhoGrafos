@@ -1,9 +1,11 @@
 #include <list>
 #include <string>
 #include <iostream>
+#include <cstdlib>
 #include "Grafo.h"
 #include "Guloso.h"
 #include <chrono>
+#include <unistd.h>
 
 using namespace std;
 using namespace chrono;
@@ -19,10 +21,39 @@ void printExecutionTime(__int64_t start, __int64_t end) {
 int main(int argc, char *argv[])
 {
     string arquivo = "grafoSimples.txt";
-    if(argc > 1)
-        arquivo = string(argv[1]);
+    float alpha = 0.1;
+    int maxIte = 2000;
+    int bloco = 100;
+    int opt;
 
-    cout << "Carregando " << arquivo << "..." << endl;
+    while ((opt = getopt(argc, argv, "n:b:a:i:")) != -1)
+    {
+        switch (opt)
+        {
+            case 'n':
+                maxIte = atoi(optarg);
+                break;
+            case 'b':
+                bloco = atoi(optarg);
+                break;
+            case 'a':
+                alpha = atof(optarg);
+                break;
+            case 'i':
+                arquivo = string(optarg);
+                break;
+            default:
+                fprintf(stderr, "Uso: %s -n nIterações -a alpha -b bloco -i arquivo\n", argv[0]);
+                exit(EXIT_FAILURE);
+        }
+    }
+
+    cout << "Arquivo: " << arquivo << endl;
+    cout << "Iterações: " << maxIte << endl;
+    cout << "Bloco: " << bloco << endl;
+    cout << "Alpha: " << alpha << endl;
+
+    //cout << "Carregando " << arquivo << "..." << endl;
     Grafo grafo(arquivo);
 
     Guloso guloso;
@@ -34,9 +65,9 @@ int main(int argc, char *argv[])
 
     float alphaReativo[]
     {
-        0.1, 0.2, 0.3, 0.4, 0.5
+        0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50
     };
-    int nAlphas = 5;
+    int nAlphas = 10;
 
     do
     {
@@ -100,7 +131,7 @@ int main(int argc, char *argv[])
             case 8:
                 cout << "Buscando solução..." << endl;
                 start = now();
-                guloso.calcularRandomizado(grafo, solucao, 0.2, 1000);
+                guloso.calcularRandomizado(grafo, solucao, alpha, maxIte);
                 end = now();
                 cout << "--- Solucao Gulosa randomizada ----" << endl;
                 guloso.imprimir(solucao);
@@ -109,7 +140,7 @@ int main(int argc, char *argv[])
             case 9:
                 cout << "Buscando solução..." << endl;
                 start = now();
-                guloso.calcularRandomizadoReativo(grafo, solucao, alphaReativo, nAlphas, 10, 2000);
+                guloso.calcularRandomizadoReativo(grafo, solucao, alphaReativo, nAlphas, bloco, maxIte);
                 end = now();
                 cout << "--- Solucao Gulosa randomizada reativa ----" << endl;
                 guloso.imprimir(solucao);

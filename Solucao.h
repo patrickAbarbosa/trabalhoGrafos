@@ -13,6 +13,7 @@ typedef struct
     float custo;
     float custoTotal;
     float alpha;
+    int iteracao;
 }SolucaoGuloso;
 
 #endif
