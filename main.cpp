@@ -18,6 +18,22 @@ void printExecutionTime(__int64_t start, __int64_t end) {
     cout << "Tempo de execução: " << ((double) (end - start)/1000000.0) << " seconds";
 }
 
+string getFileName(const string& s) {
+
+   char sep = '/';
+
+#ifdef _WIN32
+   sep = '\\';
+#endif
+
+   size_t i = s.rfind(sep, s.length());
+   if (i != string::npos) {
+      return(s.substr(i+1, s.length() - i));
+   }
+
+   return("");
+}
+
 int main(int argc, char *argv[])
 {
     string arquivo = "grafoSimples.txt";
@@ -25,8 +41,13 @@ int main(int argc, char *argv[])
     int maxIte = 2000;
     int bloco = 100;
     int opt;
+    int aux;
+    bool direct = false;
+    bool autoExit = false;
+    float best = -1;
 
-    while ((opt = getopt(argc, argv, "n:b:a:i:")) != -1)
+
+    while ((opt = getopt(argc, argv, "n:b:a:o:i:r:e")) != -1)
     {
         switch (opt)
         {
@@ -39,8 +60,18 @@ int main(int argc, char *argv[])
             case 'a':
                 alpha = atof(optarg);
                 break;
+            case 'r':
+                best = atof(optarg);
+                break;
             case 'i':
                 arquivo = string(optarg);
+                break;
+            case 'o':
+                aux = atoi(optarg);
+                direct = true;
+                break;
+            case 'e':
+                autoExit = true;
                 break;
             default:
                 fprintf(stderr, "Uso: %s -n nIterações -a alpha -b bloco -i arquivo\n", argv[0]);
@@ -48,10 +79,17 @@ int main(int argc, char *argv[])
         }
     }
 
-    cout << "Arquivo: " << arquivo << endl;
+    string arquivoNome = getFileName(arquivo);
+
+    cout << "Arquivo: " << arquivoNome << endl;
     cout << "Iterações: " << maxIte << endl;
     cout << "Bloco: " << bloco << endl;
     cout << "Alpha: " << alpha << endl;
+    cout << "Best: " << best << endl;
+    if(direct)
+        cout << "Menu: " << aux << endl;
+    if(autoExit)
+        cout << "AutoExit: ON" << endl;
 
     //cout << "Carregando " << arquivo << "..." << endl;
     Grafo grafo(arquivo);
@@ -59,7 +97,6 @@ int main(int argc, char *argv[])
     Guloso guloso;
     SolucaoGuloso solucao;
 
-    int aux;
     int verticeA, verticeB;
     float peso;
 
@@ -84,8 +121,16 @@ int main(int argc, char *argv[])
         cout << "[9]  - Melhor solucao Gulosa Randomizada Reativa" << endl;
         cout << "[10]  - Desenhar grafo" << endl;
         cout << "[0] - Encerrar" << endl;
-        cin >> aux;
-        cout << endl;
+        if(direct)
+        {
+            cout << aux << endl;
+            direct = false;
+        }
+        else
+        {
+            cin >> aux;
+            cout << endl;
+        }
         switch(aux)
         {
             case 1:
@@ -124,8 +169,9 @@ int main(int argc, char *argv[])
                 start = now();
                 guloso.calcular(grafo, solucao);
                 end = now();
-                cout << "--- Solucao Gulosa ----" << endl;
-                guloso.imprimir(solucao);
+                cout << endl << "--- Solucao Gulosa ----" << endl;
+                cout << "Arquivo: " << arquivoNome << endl;
+                guloso.imprimir(solucao, best);
                 printExecutionTime(start, end);
                 break;
             case 8:
@@ -133,8 +179,9 @@ int main(int argc, char *argv[])
                 start = now();
                 guloso.calcularRandomizado(grafo, solucao, alpha, maxIte);
                 end = now();
-                cout << "--- Solucao Gulosa randomizada ----" << endl;
-                guloso.imprimir(solucao);
+                cout << endl << "--- Solucao Gulosa randomizada ----" << endl;
+                cout << "Arquivo: " << arquivoNome << endl;
+                guloso.imprimir(solucao, best);
                 printExecutionTime(start, end);
                 break;
             case 9:
@@ -142,8 +189,9 @@ int main(int argc, char *argv[])
                 start = now();
                 guloso.calcularRandomizadoReativo(grafo, solucao, alphaReativo, nAlphas, bloco, maxIte);
                 end = now();
-                cout << "--- Solucao Gulosa randomizada reativa ----" << endl;
-                guloso.imprimir(solucao);
+                cout << endl << "--- Solucao Gulosa randomizada reativa ----" << endl;
+                cout << "Arquivo: " << arquivoNome << endl;
+                guloso.imprimir(solucao, best);
                 printExecutionTime(start, end);
                 break;
             case 10:
@@ -156,6 +204,8 @@ int main(int argc, char *argv[])
                 break;
         }
         cout << endl << endl;
+        if(autoExit)
+            break;
     }while(aux != 0);
     return 0;
 }

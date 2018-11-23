@@ -1,6 +1,7 @@
 
 #include "Guloso.h"
 #include <iostream>
+#include <cfloat>
 
 Guloso::Guloso()
 {
@@ -189,7 +190,7 @@ void Guloso::calcularRandomizadoReativo(Grafo &grafo, SolucaoGuloso &solucao, fl
     float *A = new float[nAlphas];
     float *a = new float[nAlphas];
     float sum;
-    float sum_q, sum_p;
+    float sum_q;
     p[0] = 1.0f / nAlphas;
     A[0] = 0;
     a[0] = 0;
@@ -239,20 +240,14 @@ void Guloso::calcularRandomizadoReativo(Grafo &grafo, SolucaoGuloso &solucao, fl
                 //A[j] += a[j] / (float)bloco;
                 A[j] = a[j] / i;
                 //q[j] = A[j] > 0 ? solucao.custo / (A[j] / k) : 0;
-                q[j] = A[j] > 0 ? solucao.custo / A[j] : 0;
+                q[j] = A[j] > 0 ? solucao.custo / A[j] : FLT_MIN;
                 sum_q += q[j];
                 //a[j] = 0;
-            }
-            sum_p = 0;
-            for(int j = 0; j < nAlphas; j++)
-            {
-                p[j] = q[j] / sum_q;
-                sum_p += p[j];
             }
             cout << "P: ";
             for(int j = 0; j < nAlphas; j++)
             {
-                p[j] /= sum_p;
+                p[j] = q[j] / sum_q;
                 cout << p[j] << ", ";
             }
             cout << endl;
@@ -450,12 +445,20 @@ void Guloso::imprimirSolucao(SolucaoGuloso &solucao)
     cout << endl;
 }
 
-void Guloso::imprimir(SolucaoGuloso &solucao)
+void Guloso::imprimir(SolucaoGuloso &solucao, float best)
 {
     cout << "Custo: " << solucao.custo << endl;
     cout << "Custo Máximo: " << solucao.custoTotal << endl;
-    cout << "Relação de custos " << (solucao.custo/solucao.custoTotal) << endl;
-    cout << "Vertices (" << solucao.indices.size() << ")" << endl;
+    cout << "Relação Custo Máximo " << ((solucao.custo/solucao.custoTotal)*100.0f) << "%" << endl;
+    if(best > 0)
+    {
+        float percent = ((solucao.custo / best))*100.0f;
+        cout << "Relação Melhor Custo: " << percent << "%" << endl;
+    }
+    if(solucao.alpha > 0)
+        cout << "Alpha: " << solucao.alpha << endl;
+    cout << "Iteração: " << solucao.iteracao << endl;
+    cout << "Vertices: " << solucao.indices.size() << endl;
     /*
     for (list<int>::iterator it = solucao.indices.begin() ; it != solucao.indices.end(); ++it)
     {
@@ -463,14 +466,11 @@ void Guloso::imprimir(SolucaoGuloso &solucao)
     }
     */
     //cout << endl;
-    cout << "Arestas (" << solucao.arestas.size() << ")" << endl;
+    cout << "Arestas: " << solucao.arestas.size() << endl;
     /*for (list<Aresta*>::iterator it = solucao.arestas.begin() ; it != solucao.arestas.end(); ++it)
     {
         cout << (*it)->getOrigem()->getInfo() << " -> " << (*it)->getExtremidade()->getInfo() << " | " << (*it)->getPeso() << endl;
     }*/
-    if(solucao.alpha > 0)
-        cout << "Alpha: " << solucao.alpha << endl;
-    cout << "Iteração: " << solucao.iteracao << endl;
 }
 
 bool Guloso::ordenaCandidatos(Aresta *primeiro, Aresta *segundo)

@@ -13,6 +13,7 @@ for i in range(1, n+1):
 
 addedEdges = []
 
+file.write("link\n")
 for i in range(edges):
     node1 = rd.randint(1, n)
     node2 = rd.randint(1, n)
