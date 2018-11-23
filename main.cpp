@@ -10,7 +10,7 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    string arquivo = "grafo.txt";
+    string arquivo = "grafoGerado.txt";
     if(argc > 1)
         arquivo = string(argv[1]);
 
@@ -24,6 +24,12 @@ int main(int argc, char *argv[])
     int verticeA, verticeB;
     float peso;
 
+    float alphaReativo[]
+    {
+        0.1, 0.2, 0.3, 0.4, 0.5
+    };
+    int nAlphas = 5;
+
     do
     {
         cout << "--------------- MENU ---------------"<< endl;
@@ -34,7 +40,8 @@ int main(int argc, char *argv[])
         cout << "[4]  - Imprimir Grafo." << endl;
         cout << "[5]  - Melhor solucao Gulosa" << endl;
         cout << "[6]  - Melhor solucao Gulosa Randomizada" << endl;
-        cout << "[7]  - Numero de vértices" << endl;
+        cout << "[7]  - Melhor solucao Gulosa Randomizada Reativa" << endl;
+        cout << "[8]  - Numero de vértices" << endl;
         cout << "[-1] - Encerrar" << endl;
         cin >> aux;
         cout << endl;
@@ -76,11 +83,17 @@ int main(int argc, char *argv[])
                 break;
             case 6:
                 cout << "Buscando solução..." << endl;
-                guloso.calcularRandomizado(grafo, solucao, 0.2, 100);
+                guloso.calcularRandomizado(grafo, solucao, 0.2, 10);
                 cout << "--- Solucao Gulosa randomizada ----" << endl;
                 guloso.imprimir(solucao);
                 break;
             case 7:
+                cout << "Buscando solução..." << endl;
+                guloso.calcularRandomizadoReativo(grafo, solucao, alphaReativo, nAlphas, 10, 100);
+                cout << "--- Solucao Gulosa randomizada reativa ----" << endl;
+                guloso.imprimir(solucao);
+                break;
+            case 8:
                 cout <<"Quantidade de Vertices = " << grafo.getTam() << endl;
                 break;
             case -1:

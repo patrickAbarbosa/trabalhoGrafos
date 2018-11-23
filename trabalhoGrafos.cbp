@@ -38,8 +38,7 @@
 		<Unit filename="Grafo.h" />
 		<Unit filename="Guloso.cpp" />
 		<Unit filename="Guloso.h" />
-		<Unit filename="GulosoRandomizado.cpp" />
-		<Unit filename="GulosoRandomizado.h" />
+		<Unit filename="Solucao.h" />
 		<Unit filename="Vertice.cpp" />
 		<Unit filename="Vertice.h" />
 		<Unit filename="main.cpp" />

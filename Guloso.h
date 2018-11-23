@@ -28,6 +28,7 @@ class Guloso
 
         void calcular(Grafo &grafo, SolucaoGuloso &solucao);
         void calcularRandomizado(Grafo &grafo, SolucaoGuloso &solucao, float alpha, int epocas);
+        void calcularRandomizadoReativo(Grafo &grafo, SolucaoGuloso &solucao, float *alpha, int nAlphas, int bloco, int epocas);
         void imprimir(SolucaoGuloso &solucao);
 };
 
