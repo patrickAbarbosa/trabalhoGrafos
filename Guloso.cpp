@@ -276,7 +276,16 @@ void Guloso::algoritmoGuloso(list<Aresta*> &arestas, SolucaoGuloso &solucao)
         else
         {
             if( (x->getExtremidade()->getPeso() - x->getPeso()) < 0)
-                break;
+            {
+                if( (x->getOrigem()->getPeso() - x->getPeso()) < 0)
+                    break;
+                else
+                {
+                    solucao.vertices.push_back(x->getExtremidade());
+                    if(solucao.vertices.size() > 1)
+                        solucao.arestas.push_back(x);
+                }
+            }
             else
             {
                 solucao.vertices.push_back(x->getExtremidade());
@@ -332,7 +341,16 @@ void Guloso::algoritmoGulosoRandomizado(list<Aresta*> &arestas, SolucaoGuloso &s
         else
         {
             if( (x->getExtremidade()->getPeso() - x->getPeso()) < 0)
-                break;
+            {
+                if( (x->getOrigem()->getPeso() - x->getPeso()) < 0)
+                    break;
+                else
+                {
+                    solucao.vertices.push_back(x->getExtremidade());
+                    if(solucao.vertices.size() > 1)
+                        solucao.arestas.push_back(x);
+                }
+            }
             else
             {
                 solucao.vertices.push_back(x->getExtremidade());
@@ -444,8 +462,16 @@ void Guloso::imprimir(SolucaoGuloso &solucao)
 
 bool Guloso::ordenaCandidatos(Aresta *primeiro, Aresta *segundo)
 {
-    float pesoPrimeiro = primeiro->getExtremidade()->getPeso() - primeiro->getPeso();
-    float pesoSegundo = segundo->getExtremidade()->getPeso() - segundo->getPeso();
+    float pesoPrimeiro;
+    if(primeiro->getExtremidade()->getPeso() > primeiro->getOrigem()->getPeso())
+        pesoPrimeiro = primeiro->getExtremidade()->getPeso() - primeiro->getPeso();
+    else
+        pesoPrimeiro = primeiro->getOrigem()->getPeso() - primeiro->getPeso();
+    float pesoSegundo;
+    if(segundo->getExtremidade()->getPeso() > segundo->getOrigem()->getPeso())
+        pesoSegundo= segundo->getExtremidade()->getPeso() - segundo->getPeso();
+    else
+        pesoSegundo= segundo->getOrigem()->getPeso() - segundo->getPeso();
     return pesoPrimeiro > pesoSegundo;
 }
 

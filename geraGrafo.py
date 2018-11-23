@@ -6,10 +6,9 @@ print("Max arestas: %d" % edges)
 
 file = open("grafoGerado.txt", "w")
 
-file.write(str(n)+"\n")
-
+file.write("node\n")
 for i in range(1, n+1):
-    node = str(i)+" "+str(rd.randrange(1, 100))+"\n"
+    node = str(i)+" 0 0 "+str(rd.randrange(1, 100))+"\n"
     file.write(node)
 
 addedEdges = []
@@ -26,7 +25,7 @@ for i in range(edges):
     addedEdges.append(edgeEl1)
     addedEdges.append(edgeEl2)
     weight = rd.randrange(1, 50)
-    edge = str(node1)+" "+str(node2)+" "+str(weight)+"\n"
+    edge = str(node1)+" "+str(node2)+" "+str(weight)+" 0\n"
     file.write(edge)
 
 file.close()

@@ -20,25 +20,37 @@ Grafo::Grafo(string diretorio){
         cout << "Nao foi possivel abrir o arquivo!" << endl;
     else
     {
-        int a;
-        int b;
-        float c;
-        int contaLinha = 0;
-
-        arquivo >> tam;
+        string line;
+        bool nodeMode = true;
         while(!arquivo.eof())
         {
-            if(contaLinha < tam)
-            {
-                arquivo >> a >> c;
-                adicionarVertice(a, c);
-            }
+            getline(arquivo, line);
+            if(line.size() == 0)
+                continue;
+            if(line[0] == '#')
+                continue;
+            if(line == "node")
+                nodeMode = true;
+            else if(line == "link")
+                nodeMode = false;
             else
             {
-                arquivo >> a >> b >> c;
-                adicionarAresta(a, b, c);
+                stringstream ss(line);
+                if(nodeMode)
+                {
+                    int id;
+                    float h, type, weight;
+                    ss >> id >> h >> type >> weight;
+                    adicionarVertice(id, weight);
+                }
+                else
+                {
+                    int n1, n2;
+                    float weight, stype;
+                    ss >> n1 >> n2 >> weight >> stype;
+                    adicionarAresta(n1, n2, weight);
+                }
             }
-            contaLinha++;
         }
         arquivo.close();
     }
@@ -121,20 +133,28 @@ void Grafo::draw(string fileName, SolucaoGuloso *solucao)
     stringstream ss;
     ss << "strict graph {" << endl;
     ss << "{" << endl;
-    ss << "node [style=filled,fillcolor=white];" << endl;
+    ss << "node [style=filled];" << endl;
     for(list<Vertice>::iterator vertice = inicio(); vertice != final(); vertice++)
     {
+        bool inSolution = false;
+        ss << "\"" << vertice->getInfo() << " ( " << vertice->getPeso() << " )\" [";
         if(solucao != NULL)
         {
             for(list<Vertice*>::iterator sVertice = solucao->vertices.begin(); sVertice != solucao->vertices.end(); sVertice++)
             {
                 if(*sVertice == &(*vertice))
                 {
-                    ss << "\"" << vertice->getInfo() << " ( " << vertice->getPeso() << " )\" [fillcolor=red];" << endl;
+                    inSolution = true;
                     break;
                 }
             }
         }
+        if(inSolution)
+        {
+            ss << "fillcolor=red];" << endl;
+        }
+        else
+            ss << "fillcolor=white];" << endl;
     }
     ss << "}" << endl;
     for(list<Vertice>::iterator vertice = inicio(); vertice != final(); vertice++)
