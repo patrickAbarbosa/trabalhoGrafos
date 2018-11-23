@@ -1,12 +1,20 @@
-#include <iostream>
 #include <list>
 #include <string>
+#include <iostream>
 #include "Grafo.h"
 #include "Guloso.h"
-//#include <chrono>
+#include <chrono>
 
 using namespace std;
-//using namespace chrono;
+using namespace chrono;
+
+__int64_t now() {
+    return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+}
+
+void printExecutionTime(__int64_t start, __int64_t end) {
+    cout << "Tempo de execução: " << ((double) (end - start)/1000000.0) << " seconds";
+}
 
 int main(int argc, char *argv[])
 {
@@ -32,6 +40,7 @@ int main(int argc, char *argv[])
 
     do
     {
+        __int64_t start = 0, end = 0;
         cout << "--------------- MENU ---------------"<< endl;
         cout << "[0]  - Adicionar vertice." << endl;
         cout << "[1]  - Remover vertice." << endl;
@@ -77,21 +86,30 @@ int main(int argc, char *argv[])
                 break;
             case 5:
                 cout << "Buscando solução..." << endl;
+                start = now();
                 guloso.calcular(grafo, solucao);
+                end = now();
                 cout << "--- Solucao Gulosa ----" << endl;
                 guloso.imprimir(solucao);
+                printExecutionTime(start, end);
                 break;
             case 6:
                 cout << "Buscando solução..." << endl;
-                guloso.calcularRandomizado(grafo, solucao, 0.2, 100);
+                start = now();
+                guloso.calcularRandomizado(grafo, solucao, 0.2, 10);
+                end = now();
                 cout << "--- Solucao Gulosa randomizada ----" << endl;
                 guloso.imprimir(solucao);
+                printExecutionTime(start, end);
                 break;
             case 7:
                 cout << "Buscando solução..." << endl;
+                start = now();
                 guloso.calcularRandomizadoReativo(grafo, solucao, alphaReativo, nAlphas, 10, 100);
+                end = now();
                 cout << "--- Solucao Gulosa randomizada reativa ----" << endl;
                 guloso.imprimir(solucao);
+                printExecutionTime(start, end);
                 break;
             case 8:
                 cout <<"Quantidade de Vertices = " << grafo.getTam() << endl;
