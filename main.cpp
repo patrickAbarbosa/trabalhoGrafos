@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
             case 8:
                 cout << "Buscando solução..." << endl;
                 start = now();
-                guloso.calcularRandomizado(grafo, solucao, 0.2, 10);
+                guloso.calcularRandomizado(grafo, solucao, 0.2, 1000);
                 end = now();
                 cout << "--- Solucao Gulosa randomizada ----" << endl;
                 guloso.imprimir(solucao);
@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
             case 9:
                 cout << "Buscando solução..." << endl;
                 start = now();
-                guloso.calcularRandomizadoReativo(grafo, solucao, alphaReativo, nAlphas, 10, 100);
+                guloso.calcularRandomizadoReativo(grafo, solucao, alphaReativo, nAlphas, 10, 2000);
                 end = now();
                 cout << "--- Solucao Gulosa randomizada reativa ----" << endl;
                 guloso.imprimir(solucao);
