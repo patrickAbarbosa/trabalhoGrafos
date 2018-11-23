@@ -1,7 +1,7 @@
 import random as rd
 
 n = input("Vertices: ")
-edges = rd.randint(1, n)
+edges = rd.randint(1, 2*n)
 print("Max arestas: %d" % edges)
 
 file = open("grafoGerado.txt", "w")

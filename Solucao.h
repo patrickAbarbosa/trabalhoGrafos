@@ -13,6 +13,7 @@ typedef struct
     list<Aresta*> arestas;
     float custo;
     float custoTotal;
+    float alpha;
 }SolucaoGuloso;
 
 #endif
