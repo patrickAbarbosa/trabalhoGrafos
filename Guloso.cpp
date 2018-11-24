@@ -445,20 +445,20 @@ void Guloso::imprimirSolucao(SolucaoGuloso &solucao)
     cout << endl;
 }
 
-void Guloso::imprimir(SolucaoGuloso &solucao, float best)
+void Guloso::imprimir(SolucaoGuloso &solucao, Grafo &grafo, float best)
 {
     cout << "Custo: " << solucao.custo << endl;
     cout << "Custo Máximo: " << solucao.custoTotal << endl;
     cout << "Relação Custo Máximo " << ((solucao.custo/solucao.custoTotal)*100.0f) << "%" << endl;
     if(best > 0)
     {
-        float percent = ((solucao.custo / best))*100.0f;
+        float percent = ((solucao.custo - best)/best)*100.0f;
         cout << "Relação Melhor Custo: " << percent << "%" << endl;
     }
     if(solucao.alpha > 0)
         cout << "Alpha: " << solucao.alpha << endl;
     cout << "Iteração: " << solucao.iteracao << endl;
-    cout << "Vertices: " << solucao.indices.size() << endl;
+    cout << "Vertices (" << grafo.getTam() << "): " << solucao.indices.size() << endl;
     /*
     for (list<int>::iterator it = solucao.indices.begin() ; it != solucao.indices.end(); ++it)
     {
@@ -466,7 +466,7 @@ void Guloso::imprimir(SolucaoGuloso &solucao, float best)
     }
     */
     //cout << endl;
-    cout << "Arestas: " << solucao.arestas.size() << endl;
+    cout << "Arestas (" << grafo.getArestas() << "): " << solucao.arestas.size() << endl;
     /*for (list<Aresta*>::iterator it = solucao.arestas.begin() ; it != solucao.arestas.end(); ++it)
     {
         cout << (*it)->getOrigem()->getInfo() << " -> " << (*it)->getExtremidade()->getInfo() << " | " << (*it)->getPeso() << endl;

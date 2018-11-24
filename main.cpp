@@ -171,7 +171,7 @@ int main(int argc, char *argv[])
                 end = now();
                 cout << endl << "--- Solucao Gulosa ----" << endl;
                 cout << "Arquivo: " << arquivoNome << endl;
-                guloso.imprimir(solucao, best);
+                guloso.imprimir(solucao, grafo, best);
                 printExecutionTime(start, end);
                 break;
             case 8:
@@ -181,7 +181,7 @@ int main(int argc, char *argv[])
                 end = now();
                 cout << endl << "--- Solucao Gulosa randomizada ----" << endl;
                 cout << "Arquivo: " << arquivoNome << endl;
-                guloso.imprimir(solucao, best);
+                guloso.imprimir(solucao, grafo, best);
                 printExecutionTime(start, end);
                 break;
             case 9:
@@ -191,7 +191,7 @@ int main(int argc, char *argv[])
                 end = now();
                 cout << endl << "--- Solucao Gulosa randomizada reativa ----" << endl;
                 cout << "Arquivo: " << arquivoNome << endl;
-                guloso.imprimir(solucao, best);
+                guloso.imprimir(solucao, grafo, best);
                 printExecutionTime(start, end);
                 break;
             case 10:

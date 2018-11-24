@@ -15,6 +15,7 @@
 using namespace std;
 
 Grafo::Grafo(string diretorio){
+    arestas = 0;
     arquivo.open(diretorio.c_str());
     if(!arquivo.is_open())
         cout << "Nao foi possivel abrir o arquivo!" << endl;
@@ -56,7 +57,10 @@ Grafo::Grafo(string diretorio){
     }
 }
 
-Grafo::Grafo(){}
+Grafo::Grafo()
+{
+    arestas = 0;
+}
 
 Grafo::~Grafo(){
     vertices.clear();
@@ -90,10 +94,12 @@ void Grafo::adicionarAresta(int infoA, int infoB, float peso){
     }
     extremidade->adicionarAresta(origem, peso);
     origem->adicionarAresta(extremidade, peso);
+    arestas++;
 }
 
 void Grafo::removerAresta(int infoA, int infoB){
     busca(infoA)->removerAresta(infoB);
+    arestas--;
 
 }
 unsigned int Grafo::getTam(){
@@ -102,6 +108,10 @@ unsigned int Grafo::getTam(){
 
 unsigned int  Grafo::getGrau(int info){
     return (unsigned int) busca(info)->getGrau();
+}
+
+unsigned int Grafo::getArestas(){
+    return (unsigned  int) arestas;
 }
 
 Vertice* Grafo::busca(int info){

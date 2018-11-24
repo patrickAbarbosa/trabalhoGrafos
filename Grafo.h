@@ -19,6 +19,7 @@ class Grafo {
         int tam;
         fstream arquivo;
         list<Vertice> vertices;
+        int arestas;
     public:
         Grafo(string diretorio);
         Grafo();
@@ -33,6 +34,7 @@ class Grafo {
         list<Vertice>::iterator final();
         unsigned int getTam(); //vertices.size();
         unsigned int  getGrau(int info);
+        unsigned int getArestas();
 
         void draw(string fileName, SolucaoGuloso *solucao = NULL);
 
