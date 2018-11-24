@@ -6,6 +6,7 @@
 #include "Guloso.h"
 #include <chrono>
 #include <unistd.h>
+#include <fstream>
 
 using namespace std;
 using namespace chrono;
@@ -14,8 +15,10 @@ __int64_t now() {
     return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
 }
 
-void printExecutionTime(__int64_t start, __int64_t end) {
-    cout << "Tempo de execução: " << ((double) (end - start)/1000000.0) << " seconds";
+double printExecutionTime(__int64_t start, __int64_t end) {
+    double secs = ((double) (end - start)/1000000.0);
+    cout << "Tempo de execução: " << secs << " seconds";
+    return secs;
 }
 
 string getFileName(const string& s) {
@@ -34,9 +37,23 @@ string getFileName(const string& s) {
    return("");
 }
 
+void log(ofstream &file, string algoritimo, string instancia, double secs, SolucaoGuloso &solucao, Grafo &grafo, float best = -1)
+{
+    if(!file.is_open())
+        return;
+    float ptotal = ((solucao.custo/solucao.custoTotal)*100.0f);
+    float percent = 0;
+    if(best > 0)
+    {
+        percent = ((solucao.custo - best)/best)*100.0f;
+    }
+    file << algoritimo << ", " << instancia << ", " << secs << ", " << solucao.alpha << ", " << solucao.custo << ", " << solucao.custoTotal << ", " << ptotal << "%, " << best << ", " << percent << "%, " << solucao.iteracao << ", " << grafo.getTam() << ", " << solucao.indices.size() << ", " << grafo.getArestas() << ", " << solucao.arestas.size() << endl;
+}
+
 int main(int argc, char *argv[])
 {
     string arquivo = "grafoSimples.txt";
+    string saida = "";
     float alpha = 0.1;
     int maxIte = 2000;
     int bloco = 100;
@@ -45,51 +62,74 @@ int main(int argc, char *argv[])
     bool direct = false;
     bool autoExit = false;
     float best = -1;
+    int loop = 1;
 
 
-    while ((opt = getopt(argc, argv, "n:b:a:o:i:r:e")) != -1)
+    while ((opt = getopt(argc, argv, "n:b:a:o:i:r:s:l:e")) != -1)
     {
         switch (opt)
         {
-            case 'n':
+            case 'n': // Número máximo de iterações
                 maxIte = atoi(optarg);
                 break;
-            case 'b':
+            case 'b': // Tamanho do bloco
                 bloco = atoi(optarg);
                 break;
-            case 'a':
+            case 'a': // Alpha
                 alpha = atof(optarg);
                 break;
-            case 'r':
+            case 'r': // Referência, melhor solução
                 best = atof(optarg);
                 break;
-            case 'i':
+            case 'i': // Arquivo de entrada
                 arquivo = string(optarg);
                 break;
-            case 'o':
+            case 'o': // Opção no menu
                 aux = atoi(optarg);
                 direct = true;
                 break;
-            case 'e':
+            case 's': // Arquivo de saída
+                saida = string(optarg);
+                break;
+            case 'l': // Quantidade de execuções
+                loop = atoi(optarg);
+                break;
+            case 'e': // Sair ao executar algoritimo
                 autoExit = true;
                 break;
             default:
-                fprintf(stderr, "Uso: %s -n nIterações -a alpha -b bloco -i arquivo\n", argv[0]);
+                fprintf(stderr, "Uso: %s -o opcaoMenu -s arquivoSaida -e sairAutomaticamente -e quantidadeExecucções -r Referência -n nIterações -a alpha -b bloco -i arquivoEntrada\n", argv[0]);
                 exit(EXIT_FAILURE);
         }
     }
 
     string arquivoNome = getFileName(arquivo);
+    ofstream arquivoLog;
 
-    cout << "Arquivo: " << arquivoNome << endl;
+
+    cout << "Entrada: " << arquivoNome << endl;
     cout << "Iterações: " << maxIte << endl;
     cout << "Bloco: " << bloco << endl;
+    cout << "Loop: " << loop << endl;
     cout << "Alpha: " << alpha << endl;
     cout << "Best: " << best << endl;
     if(direct)
         cout << "Menu: " << aux << endl;
     if(autoExit)
         cout << "AutoExit: ON" << endl;
+    if(saida.size() > 0)
+    {
+        string saidaNome = getFileName(saida);
+        cout << "Saída: " << saidaNome << endl;
+        ifstream infile(saida);
+        bool exists = infile.good();
+        infile.close();
+        arquivoLog.open(saida, ios::app);
+        if(!exists)
+        {
+            arquivoLog << "ALG" << ", " << "INST" << ", " << "t[s]" << ", " << "alpha" << ", " << "custo" << ", " << "custo_total" << ", " << "percent_total" << ", " << "melhor_custo" << ", " << "relacao_melhor" << ", " << "iteracao_melhor" << ", " << "grafo_nos" << ", " << "solucao_nos" << ", " << "grafo_arestas" << ", " << "solucao_arestas" << endl;
+        }
+    }
 
     //cout << "Carregando " << arquivo << "..." << endl;
     Grafo grafo(arquivo);
@@ -99,12 +139,14 @@ int main(int argc, char *argv[])
 
     int verticeA, verticeB;
     float peso;
+    double secs;
 
     float alphaReativo[]
     {
         0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.45, 0.50
     };
     int nAlphas = 10;
+    int i = 0;
 
     do
     {
@@ -119,7 +161,7 @@ int main(int argc, char *argv[])
         cout << "[7]  - Melhor solucao Gulosa" << endl;
         cout << "[8]  - Melhor solucao Gulosa Randomizada" << endl;
         cout << "[9]  - Melhor solucao Gulosa Randomizada Reativa" << endl;
-        cout << "[10]  - Desenhar grafo" << endl;
+        cout << "[10] - Desenhar grafo" << endl;
         cout << "[0] - Encerrar" << endl;
         if(direct)
         {
@@ -165,34 +207,46 @@ int main(int argc, char *argv[])
                 cout <<"Quantidade de Vertices = " << grafo.getTam() << endl;
                 break;
             case 7:
-                cout << "Buscando solução..." << endl;
-                start = now();
-                guloso.calcular(grafo, solucao);
-                end = now();
-                cout << endl << "--- Solucao Gulosa ----" << endl;
-                cout << "Arquivo: " << arquivoNome << endl;
-                guloso.imprimir(solucao, grafo, best);
-                printExecutionTime(start, end);
+                for(i = 0; i < loop; i++)
+                {
+                    cout << "Buscando solução " << (i+1) << "..." << endl;
+                    start = now();
+                    guloso.calcular(grafo, solucao);
+                    end = now();
+                    cout << endl << "--- Solucao Gulosa ----" << endl;
+                    cout << "Arquivo: " << arquivoNome << endl;
+                    guloso.imprimir(solucao, grafo, best);
+                    secs = printExecutionTime(start, end);
+                    log(arquivoLog, "A1", arquivoNome, secs, solucao, grafo, best);
+                }
                 break;
             case 8:
-                cout << "Buscando solução..." << endl;
-                start = now();
-                guloso.calcularRandomizado(grafo, solucao, alpha, maxIte);
-                end = now();
-                cout << endl << "--- Solucao Gulosa randomizada ----" << endl;
-                cout << "Arquivo: " << arquivoNome << endl;
-                guloso.imprimir(solucao, grafo, best);
-                printExecutionTime(start, end);
+                for(i = 0; i < loop; i++)
+                {
+                    cout << "Buscando solução " << (i+1) << "..." << endl;
+                    start = now();
+                    guloso.calcularRandomizado(grafo, solucao, alpha, maxIte);
+                    end = now();
+                    cout << endl << "--- Solucao Gulosa randomizada ----" << endl;
+                    cout << "Arquivo: " << arquivoNome << endl;
+                    guloso.imprimir(solucao, grafo, best);
+                    secs = printExecutionTime(start, end);
+                    log(arquivoLog, "A2", arquivoNome, secs, solucao, grafo, best);
+                }
                 break;
             case 9:
-                cout << "Buscando solução..." << endl;
-                start = now();
-                guloso.calcularRandomizadoReativo(grafo, solucao, alphaReativo, nAlphas, bloco, maxIte);
-                end = now();
-                cout << endl << "--- Solucao Gulosa randomizada reativa ----" << endl;
-                cout << "Arquivo: " << arquivoNome << endl;
-                guloso.imprimir(solucao, grafo, best);
-                printExecutionTime(start, end);
+                for(i = 0; i < loop; i++)
+                {
+                    cout << "Buscando solução " << (i+1) << "..." << endl;
+                    start = now();
+                    guloso.calcularRandomizadoReativo(grafo, solucao, alphaReativo, nAlphas, bloco, maxIte);
+                    end = now();
+                    cout << endl << "--- Solucao Gulosa randomizada reativa ----" << endl;
+                    cout << "Arquivo: " << arquivoNome << endl;
+                    guloso.imprimir(solucao, grafo, best);
+                    secs = printExecutionTime(start, end);
+                    log(arquivoLog, "A3", arquivoNome, secs, solucao, grafo, best);
+                }
                 break;
             case 10:
                 grafo.draw("grafo.png", &solucao);
@@ -207,5 +261,7 @@ int main(int argc, char *argv[])
         if(autoExit)
             break;
     }while(aux != 0);
+    if(arquivoLog.is_open())
+        arquivoLog.close();
     return 0;
 }

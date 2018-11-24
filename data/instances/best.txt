@@ -1,4 +1,4 @@
-INST			OPT		t[s]
+#INST			OPT		t[s]
 
 Canuto:C2-A		50		7
 Canuto:C3-A		414		87
