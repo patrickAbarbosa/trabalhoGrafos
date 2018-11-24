@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./bin/Release/trabalhoGrafos -i data/instances/i01M3.txt.red -n 2000 -b 100 -e -a 0.2 -r 355625.4 -o 9
+./bin/Release/trabalhoGrafos -n 2000 -b 100 -a 0.2 -o 9 -i data/instances/C2-A -r 50
