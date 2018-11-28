@@ -4,19 +4,22 @@
 #include <cstdlib>
 #include "Grafo.h"
 #include "Guloso.h"
-#include <chrono>
 #include <unistd.h>
 #include <fstream>
+#include <time.h>
 
 using namespace std;
-using namespace chrono;
 
-__int64_t now() {
-    return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
+void now(struct timespec &t)
+{
+    clock_gettime( CLOCK_REALTIME, &t);
 }
 
-double printExecutionTime(__int64_t start, __int64_t end) {
-    double secs = ((double) (end - start)/1000000.0);
+double printExecutionTime(struct timespec start, struct timespec stop)
+{
+    double secs = ( stop.tv_sec - start.tv_sec )
+          + ( ((double) stop.tv_nsec - start.tv_nsec )
+            / (double)1000000000L);
     cout << "Tempo de execução: " << secs << " seconds";
     return secs;
 }
@@ -30,7 +33,8 @@ string getFileName(const string& s) {
 #endif
 
    size_t i = s.rfind(sep, s.length());
-   if (i != string::npos) {
+   if (i != string::npos)
+   {
       return(s.substr(i+1, s.length() - i));
    }
 
@@ -63,6 +67,7 @@ int main(int argc, char *argv[])
     bool autoExit = false;
     float best = -1;
     int loop = 1;
+    struct timespec start, stop;
 
 
     while ((opt = getopt(argc, argv, "n:b:a:o:i:r:s:l:e")) != -1)
@@ -106,7 +111,6 @@ int main(int argc, char *argv[])
     string arquivoNome = getFileName(arquivo);
     ofstream arquivoLog;
 
-
     cout << "Entrada: " << arquivoNome << endl;
     cout << "Iterações: " << maxIte << endl;
     cout << "Bloco: " << bloco << endl;
@@ -121,10 +125,10 @@ int main(int argc, char *argv[])
     {
         string saidaNome = getFileName(saida);
         cout << "Saída: " << saidaNome << endl;
-        ifstream infile(saida);
+        ifstream infile(saida.c_str());
         bool exists = infile.good();
         infile.close();
-        arquivoLog.open(saida, ios::app);
+        arquivoLog.open(saida.c_str(), ios::app);
         if(!exists)
         {
             arquivoLog << "ALG" << ", " << "INST" << ", " << "t[s]" << ", " << "alpha" << ", " << "custo" << ", " << "custo_total" << ", " << "percent_total" << ", " << "melhor_custo" << ", " << "relacao_melhor" << ", " << "iteracao_melhor" << ", " << "grafo_nos" << ", " << "solucao_nos" << ", " << "grafo_arestas" << ", " << "solucao_arestas" << endl;
@@ -150,7 +154,6 @@ int main(int argc, char *argv[])
 
     do
     {
-        __int64_t start = 0, end = 0;
         cout << "--------------- MENU ---------------"<< endl;
         cout << "[1]  - Adicionar vertice." << endl;
         cout << "[2]  - Remover vertice." << endl;
@@ -210,13 +213,13 @@ int main(int argc, char *argv[])
                 for(i = 0; i < loop; i++)
                 {
                     cout << "Buscando solução " << (i+1) << "..." << endl;
-                    start = now();
+                    now(start);
                     guloso.calcular(grafo, solucao);
-                    end = now();
+                    now(stop);
                     cout << endl << "--- Solucao Gulosa ----" << endl;
                     cout << "Arquivo: " << arquivoNome << endl;
                     guloso.imprimir(solucao, grafo, best);
-                    secs = printExecutionTime(start, end);
+                    secs = printExecutionTime(start, stop);
                     log(arquivoLog, "A1", arquivoNome, secs, solucao, grafo, best);
                 }
                 break;
@@ -224,13 +227,13 @@ int main(int argc, char *argv[])
                 for(i = 0; i < loop; i++)
                 {
                     cout << "Buscando solução " << (i+1) << "..." << endl;
-                    start = now();
+                    now(start);
                     guloso.calcularRandomizado(grafo, solucao, alpha, maxIte);
-                    end = now();
+                    now(stop);
                     cout << endl << "--- Solucao Gulosa randomizada ----" << endl;
                     cout << "Arquivo: " << arquivoNome << endl;
                     guloso.imprimir(solucao, grafo, best);
-                    secs = printExecutionTime(start, end);
+                    secs = printExecutionTime(start, stop);
                     log(arquivoLog, "A2", arquivoNome, secs, solucao, grafo, best);
                 }
                 break;
@@ -238,13 +241,13 @@ int main(int argc, char *argv[])
                 for(i = 0; i < loop; i++)
                 {
                     cout << "Buscando solução " << (i+1) << "..." << endl;
-                    start = now();
+                    now(start);
                     guloso.calcularRandomizadoReativo(grafo, solucao, alphaReativo, nAlphas, bloco, maxIte);
-                    end = now();
+                    now(stop);
                     cout << endl << "--- Solucao Gulosa randomizada reativa ----" << endl;
                     cout << "Arquivo: " << arquivoNome << endl;
                     guloso.imprimir(solucao, grafo, best);
-                    secs = printExecutionTime(start, end);
+                    secs = printExecutionTime(start, stop);
                     log(arquivoLog, "A3", arquivoNome, secs, solucao, grafo, best);
                 }
                 break;
