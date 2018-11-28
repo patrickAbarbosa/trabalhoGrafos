@@ -4,7 +4,7 @@ Canuto:C2-A		50		7
 Canuto:C3-A		414		87
 Canuto:D1-B		106		257
 Canuto:D6-A		18		20
-Canuto:D10-A		1671		4193
+Canuto:D12-A		42		1.4
 Cologne1:i01M1     	109271.5	0.5
 Cologne2:i02M3		628833.6	27331.9
 Cologne1:i03M1		139749.4	0.5
