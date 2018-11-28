@@ -2,6 +2,7 @@
 #include "Guloso.h"
 #include <iostream>
 #include <cfloat>
+#include <cstdlib>
 
 Guloso::Guloso()
 {
