@@ -9,7 +9,7 @@ with open('data/instances/best.txt', 'r') as f:
         if line.startswith('#'):
             continue
         else:
-            parts = filter(None, line.rstrip().split('\t'))
+            parts = [x for x in line.rstrip().split('\t') if x]
             if len(parts) == 3:
                 inst = parts[0]
                 opt = parts[1]
