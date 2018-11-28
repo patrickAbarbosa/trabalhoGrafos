@@ -26,7 +26,7 @@ for i in range(edges):
     addedEdges.append(edgeEl1)
     addedEdges.append(edgeEl2)
     weight = rd.randrange(1, 50)
-    edge = str(node1)+" "+str(node2)+" "+str(weight)+" 0\n"
+    edge = str(i+1)+" "+str(node1)+" "+str(node2)+" "+str(weight)+"\n"
     file.write(edge)
 
 file.close()

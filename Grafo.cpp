@@ -46,9 +46,9 @@ Grafo::Grafo(string diretorio){
                 }
                 else
                 {
-                    int n1, n2;
-                    float weight, stype;
-                    ss >> n1 >> n2 >> weight >> stype;
+                    int id, n1, n2;
+                    float weight;
+                    ss >> id >> n1 >> n2 >> weight;
                     adicionarAresta(n1, n2, weight);
                 }
             }
