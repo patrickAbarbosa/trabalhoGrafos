@@ -25,15 +25,15 @@ for filename in os.listdir('data/instances'):
         name = filename.split('.')[0]
         opt = best[name][0]
         
-        cmdA1 = './bin/Release/trabalhoGrafos -l 1 -m 22 -e -r %f data/instances/%s output.txt' % (filename, opt)
+        cmdA1 = './bin/Release/trabalhoGrafos -l 1 -m 22 -e -r %f data/instances/%s output.txt' % (opt, filename,)
         os.system(cmdA1)
 
-        cmdA2_1 = './bin/Release/trabalhoGrafos -l 20 -n 1000 -a 0.1 -m 23 -e -r %f data/instances/%s output.txt' % (filename, opt)
-        cmdA2_2 = './bin/Release/trabalhoGrafos -l 20 -n 1000 -a 0.2 -m 23 -e -r %f data/instances/%s output.txt' % (filename, opt)
-        cmdA2_3 = './bin/Release/trabalhoGrafos -l 20 -n 1000 -a 0.3 -m 23 -e -r %f data/instances/%s output.txt' % (filename, opt)
+        cmdA2_1 = './bin/Release/trabalhoGrafos -l 20 -n 1000 -a 0.1 -m 23 -e -r %f data/instances/%s output.txt' % (opt, filename,)
+        cmdA2_2 = './bin/Release/trabalhoGrafos -l 20 -n 1000 -a 0.2 -m 23 -e -r %f data/instances/%s output.txt' % (opt, filename,)
+        cmdA2_3 = './bin/Release/trabalhoGrafos -l 20 -n 1000 -a 0.3 -m 23 -e -r %f data/instances/%s output.txt' % (opt, filename,)
         os.system(cmdA2_1)
         os.system(cmdA2_2)
         os.system(cmdA2_3)
 
-        cmdA3 = './bin/Release/trabalhoGrafos -l 20 -n 2000 -b 50 -m 26 -e -r %f data/instances/%s output.txt' % (filename, opt)
+        cmdA3 = './bin/Release/trabalhoGrafos -l 20 -n 2000 -b 50 -m 26 -e -r %f data/instances/%s output.txt' % (opt, filename,)
         os.system(cmdA3)
