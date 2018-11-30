@@ -12,6 +12,8 @@ private:
     Vertice *origem;
     Vertice *extremidade;
 public:
+    bool hide;
+    int aux1, aux2;
     Aresta(){};
     ~Aresta(){};
 

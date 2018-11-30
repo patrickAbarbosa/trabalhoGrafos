@@ -17,23 +17,23 @@ with open('data/instances/best.txt', 'r') as f:
                 name = inst.split(':')[1].rstrip()
                 best[name] = (float(opt), float(secs))
 
-if os.path.exists("output.csv"):
-    os.remove("output.csv")
+if os.path.exists("output.txt.csv"):
+    os.remove("output.txt.csv")
 
 for filename in os.listdir('data/instances'):
     if filename.endswith('.dat'):
         name = filename.split('.')[0]
         opt = best[name][0]
         
-        cmdA1 = './bin/Release/trabalhoGrafos -l 1 -o 7 -s output.csv -e -i data/instances/%s -r %f' % (filename, opt)
+        cmdA1 = './bin/Release/trabalhoGrafos -l 1 -m 22 -e -r %f data/instances/%s output.txt' % (filename, opt)
         os.system(cmdA1)
 
-        cmdA2_1 = './bin/Release/trabalhoGrafos -l 20 -n 1000 -a 0.1 -o 8 -s output.csv -e -i data/instances/%s -r %f' % (filename, opt)
-        cmdA2_2 = './bin/Release/trabalhoGrafos -l 20 -n 1000 -a 0.2 -o 8 -s output.csv -e -i data/instances/%s -r %f' % (filename, opt)
-        cmdA2_3 = './bin/Release/trabalhoGrafos -l 20 -n 1000 -a 0.3 -o 8 -s output.csv -e -i data/instances/%s -r %f' % (filename, opt)
+        cmdA2_1 = './bin/Release/trabalhoGrafos -l 20 -n 1000 -a 0.1 -m 23 -e -r %f data/instances/%s output.txt' % (filename, opt)
+        cmdA2_2 = './bin/Release/trabalhoGrafos -l 20 -n 1000 -a 0.2 -m 23 -e -r %f data/instances/%s output.txt' % (filename, opt)
+        cmdA2_3 = './bin/Release/trabalhoGrafos -l 20 -n 1000 -a 0.3 -m 23 -e -r %f data/instances/%s output.txt' % (filename, opt)
         os.system(cmdA2_1)
         os.system(cmdA2_2)
         os.system(cmdA2_3)
 
-        cmdA3 = './bin/Release/trabalhoGrafos -l 20 -n 2000 -b 50 -o 9 -s output.csv -e -i data/instances/%s -r %f' % (filename, opt)
+        cmdA3 = './bin/Release/trabalhoGrafos -l 20 -n 2000 -b 50 -m 26 -e -r %f data/instances/%s output.txt' % (filename, opt)
         os.system(cmdA3)

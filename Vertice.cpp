@@ -35,13 +35,14 @@ float Vertice::getPeso()
     return peso;
 }
 
-void Vertice::adicionarAresta(Vertice *extremidade, float peso)
+void Vertice::adicionarAresta(Vertice *extremidade, float peso, bool hide)
 {
     Aresta aresta;
     aresta.setPeso(peso);
     aresta.setOrigem(this);
     aresta.setExtremidade(extremidade);
-    arestas.push_back(aresta);
+    aresta.hide = hide;
+    arestas.push_front(aresta);
 }
 
 void Vertice::removerAresta(Vertice *extremidade)
@@ -75,7 +76,8 @@ void Vertice::imprimir()
 {
     for(list<Aresta>::iterator it = arestas.begin(); it != arestas.end(); it++)
     {
-        cout << "(" << info << ", " << peso << ") (" << it->getExtremidade()->info << ", " << it->getExtremidade()->peso << ") " << it->getPeso() << endl;
+        if(!it->hide)
+            cout << "(" << info << ", " << peso << ") (" << it->getExtremidade()->info << ", " << it->getExtremidade()->peso << ") " << it->getPeso() << endl;
     }
 }
 

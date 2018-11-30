@@ -4,7 +4,7 @@ n = input("Vertices: ")
 edges = rd.randint(1, 2*n)
 print("Max arestas: %d" % edges)
 
-file = open("grafoGerado.txt", "w")
+file = open("data/tests/grafoGerado.txt", "w")
 
 file.write("node\n")
 for i in range(1, n+1):

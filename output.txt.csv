@@ -1,0 +1,7 @@
+ALG, INST, t[s], alpha, custo, custo_total, percent_total, melhor_custo, relacao_melhor, iteracao_melhor, grafo_nos, solucao_nos, grafo_arestas, solucao_arestas
+A1, grafo2.txt, 1.7402e-05, 0, 7, 9, 77.7778%, -1, 0%, 0, 6, 3, 9, 2
+A2, grafo2.txt, 0.0289338, 0.1, 8, 9, 88.8889%, -1, 0%, 1, 6, 3, 9, 2
+A2, grafo2.txt, 0.0315594, 0.1, 8, 9, 88.8889%, -1, 0%, 1, 6, 3, 9, 2
+A1, grafo2.txt, 1.6201e-05, 0, 7, 9, 77.7778%, -1, 0%, 0, 6, 3, 9, 2
+A2, grafo2.txt, 0.0297035, 0.1, 8, 9, 88.8889%, -1, 0%, 1, 6, 3, 9, 2
+A3, grafo2.txt, 0.109149, 0.5, 3, 9, 33.3333%, -1, 0%, 40, 6, 2, 9, 1
