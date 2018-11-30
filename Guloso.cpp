@@ -116,7 +116,7 @@ void Guloso::calcularRandomizado(Grafo &grafo, SolucaoGuloso &solucao, float alp
     for(int i = 0; i < epocas; i++)
     {
         cout << "Epoca: " << i << endl;
-        solucaoTemporaria.custoTotal = solucao.custoTotal;
+        solucaoTemporaria.custoTotal = solucao.custoTotal+1;
         solucaoTemporaria.arestas.clear();
         solucaoTemporaria.vertices.clear();
         solucaoTemporaria.indices.clear();
@@ -125,7 +125,7 @@ void Guloso::calcularRandomizado(Grafo &grafo, SolucaoGuloso &solucao, float alp
         solucaoTemporaria.iteracao = i+1;
 
         algoritmoGulosoRandomizado(arestas, solucaoTemporaria, alpha);
-        if(solucaoTemporaria.custo < solucao.custo)
+        if(solucaoTemporaria.custo < solucao.custo || i == 0)
         {
             copiaSolucao(solucaoTemporaria, solucao);
         }
@@ -225,7 +225,7 @@ void Guloso::calcularRandomizadoReativo(Grafo &grafo, SolucaoGuloso &solucao, fl
         solucaoTemporaria.iteracao = i;
 
         algoritmoGulosoRandomizado(arestas, solucaoTemporaria, alpha[n]);
-        if(solucaoTemporaria.custo < solucao.custo)
+        if(solucaoTemporaria.custo < solucao.custo || i == 1)
         {
             copiaSolucao(solucaoTemporaria, solucao);
         }

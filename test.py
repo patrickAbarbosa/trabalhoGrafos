@@ -35,5 +35,5 @@ for filename in os.listdir('data/instances'):
         os.system(cmdA2_2)
         os.system(cmdA2_3)
 
-        cmdA3 = './bin/Release/trabalhoGrafos -l 20 -n 2000 -b 100 -o 9 -s output.csv -e -i data/instances/%s -r %f' % (filename, opt)
+        cmdA3 = './bin/Release/trabalhoGrafos -l 20 -n 2000 -b 50 -o 9 -s output.csv -e -i data/instances/%s -r %f' % (filename, opt)
         os.system(cmdA3)
