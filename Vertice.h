@@ -10,13 +10,16 @@ class Aresta;
 class Vertice
 {
 public:
+    void *data;
+    int aux1, aux2;
+    float aux3;
     Vertice();
     ~Vertice();
     void setInfo(int info);
     int getInfo();
     void setPeso(float Peso);
     float getPeso();
-    void adicionarAresta(Vertice *extremidade, float peso);
+    void adicionarAresta(Vertice *extremidade, float peso, bool hide = false);
     void removerAresta(Vertice *extremidade);
     void removerAresta(int extremidade);
     int getGrau();
