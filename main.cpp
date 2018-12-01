@@ -11,11 +11,13 @@
 
 using namespace std;
 
+// Esta função armazena o tempo atual
 void now(struct timespec &t)
 {
     clock_gettime( CLOCK_REALTIME, &t);
 }
 
+// Calculamos a diferença entre dois tempos e exibimos em segundos
 double printExecutionTime(struct timespec start, struct timespec stop)
 {
     double secs = ( stop.tv_sec - start.tv_sec )
@@ -25,6 +27,7 @@ double printExecutionTime(struct timespec start, struct timespec stop)
     return secs;
 }
 
+// Dado o caminho de um arquivo, retornamos apenas o nome
 string getFileName(const string& s) {
 
    char sep = '/';
@@ -42,6 +45,7 @@ string getFileName(const string& s) {
    return("");
 }
 
+// Coloca o resultado de uma solução gulosa em um arquivo csv
 void log(ofstream &file, string algoritimo, string instancia, double secs, SolucaoGuloso &solucao, Grafo &grafo, float best = -1)
 {
     if(!file.is_open())
@@ -71,6 +75,7 @@ int main(int argc, char *argv[])
     struct timespec start, stop;
 
 
+    // Analisamos os argumenos passados ao programa
     while ((opt = getopt(argc, argv, "n:b:a:m:r:l:e")) != -1)
     {
         switch (opt)
@@ -103,16 +108,17 @@ int main(int argc, char *argv[])
         }
     }
 
+    // Verificamos se além dos parâmetros, também foi passado o nome do arquivo de entrada e de saída
     bool loadIn = false, loadOut = false;
     for (int i = optind; i < argc; i++)
     {
-        if(loadIn == false)
+        if(loadIn == false) // O primeiro argumento que não é parâmetro é considerado como o nome do arquivo de entrada
         {
             // Arquivo de entrada
             arquivo = string(argv[i]);
             loadIn = true;
         }
-        else if(loadOut == false)
+        else if(loadOut == false) // O segundo argumento que não é parâmetro é considerado como o nome do arquivo de saída
         {
             // Arquivo de saída
             saida = string(argv[i]);
@@ -125,6 +131,7 @@ int main(int argc, char *argv[])
     string arquivoNome = getFileName(arquivo);
     ofstream arquivoLog, arquivoCSV;
 
+    // Exibimos as informações de execução do programa
     cout << "Entrada: " << arquivoNome << endl;
     cout << "Iterações: " << maxIte << endl;
     cout << "Bloco: " << bloco << endl;
@@ -135,8 +142,11 @@ int main(int argc, char *argv[])
         cout << "Menu: " << aux << endl;
     if(autoExit)
         cout << "AutoExit: ON" << endl;
-    if(saida.size() > 0)
+    if(saida.size() > 0) // Se existe um arquivo de saída, abrimos este arquivo
     {
+        // Abrios dois arquivos de saída, um de log e um csv
+        // O arquivo de log armazena a saída para qualquer item do meno
+        // O arquivo csv armazena as soluções gulosas encontradas
         string saidaCSV = saida+".csv";
         string saidaNome = getFileName(saida);
         string saidaCSVNome = getFileName(saidaCSV);
@@ -154,10 +164,12 @@ int main(int argc, char *argv[])
         arquivoLog << endl << "Carregando: " << saidaNome << endl;
     }
 
-    //cout << "Carregando " << arquivo << "..." << endl;
+    // Criamos um grafo e carregamos o arquivo de entrada
     Grafo grafo(arquivo);
 
+    // Criamos uma instância da classe para resolver o problema de Steiner com coleta
     Guloso guloso;
+    // Criamos um solução vazia
     SolucaoGuloso solucao;
 
     int verticeA, verticeB, K, T, gIn, gOut;
@@ -173,8 +185,10 @@ int main(int argc, char *argv[])
     int nAlphas = 10;
     int i = 0;
 
+    // Executamos o menu em um loop
     do
     {
+        // Exibimos o menu
         cout << "--------------- MENU ---------------"<< endl;
         cout << "[1]  - Alterar entre grafo/digrafo" << endl;
         cout << "[2]  - Adicionar vertice." << endl;
@@ -203,46 +217,52 @@ int main(int argc, char *argv[])
         cout << "[25] - Desenhar grafo" << endl;
         cout << "[26] - Salvar grafo" << endl;
         cout << "[0] - Encerrar" << endl;
+        // Se a opção do menu foi passada por parÂmetro, executa esta opção
         if(direct)
         {
             cout << aux << endl;
             direct = false;
         }
-        else
+        else // Se nenhuma opção foi passada por parâmetro, espera o usuário digitar uma opção
         {
+            cout << "Opção: ";
             cin >> aux;
             cout << endl;
         }
+        // Verifica a opção escolhida
         switch(aux)
         {
-            case 1:
+            case 1: // Se o usuário deseja alterar o tipo de grafo, solicita a escolha do tipo
                 cout << "-- Alterar tipo" << endl;
                 cout << "1) Digrafo" << endl;
                 cout << "2) Grafo" << endl;
                 cout << "Tipo: ";
                 cin >> T;
                 cout << endl;
+                // Para mudar o tipo do grafo, recarregamos-o passando a opção de tipo solicitada
                 grafo.carregar(arquivo, T == 1);
+                // Como limpamos o grafo, devemos limpar a solução que dependia dele
                 solucao.indices.clear();
                 solucao.vertices.clear();
                 solucao.arestas.clear();
-                if(arquivoLog.is_open())
+                if(arquivoLog.is_open()) // logamos para o arquivo
                 {
                     arquivoLog << "Tipo: " << (T == 1 ? "Digrafo" : "Grafo") << endl;
                 }
                 break;
-            case 2:
+            case 2: // Se o usuário deseja adicionar um vértice, aguardamos a entrada de um vértice e um peso
                 cout << "-- Adicionar Vertice" << endl;
                 cout << "Digite vertice e seu peso: ";
                 cin >> verticeA >> peso;
                 cout << endl;
+                // Adicionamos um vértice com peso no grafo
                 grafo.adicionarVertice(verticeA, peso);
                 if(arquivoLog.is_open())
                 {
                     arquivoLog << "Adicionar vértice: " << verticeA << " ( " << peso << " )" << endl;
                 }
                 break;
-            case 3:
+            case 3: // Se o usuário deseja remover um vértice, aguardamos a entrada de um vértice
                 cout << "-- Remover Vertice" <<endl;
                 cout << "Digite o vertice: ";
                 cin >> verticeA;
@@ -252,7 +272,7 @@ int main(int argc, char *argv[])
                     arquivoLog << "Remover vértice: " << verticeA << endl;
                 }
                 break;
-            case 4:
+            case 4: // Se o usuário deseja adicionar uma aresta, aguardamos a entrada de dois vértices
                 cout << "-- Adicionar aresta" << endl;
                 cout << "Digite o vertice A, o vertice B e o peso da aresta: ";
                 cin >> verticeA >> verticeB >>  peso;
@@ -262,7 +282,7 @@ int main(int argc, char *argv[])
                     arquivoLog << "Adicionar aresta: " << verticeA << " -> " << verticeB << " ( " << peso << " )" << endl;
                 }
                 break;
-            case 5:
+            case 5: // Se o usuário deseja remover uma aresta, aguardamos a entrada de dois vértices
                 cout << "-- Remover aresta" << endl;
                 cout << "Digite o vertice A e o vertice B: ";
                 cin >> verticeA >> verticeB;
@@ -272,28 +292,30 @@ int main(int argc, char *argv[])
                     arquivoLog << "Remover aresta: " << verticeA << " -> " << verticeB << endl;
                 }
                 break;
-            case 6:
+            case 6:// Se o usuário deseja imprimir um grafo
                 grafo.imprimir();
                 if(arquivoLog.is_open())
                 {
                     arquivoLog << "Imprimir Grafo" << endl;
                 }
                 break;
-            case 7:
+            case 7:// Se o usuário deseja visualizar a ordem do grafo
                 cout <<"Ordem = " << grafo.getTam() << endl;
                 if(arquivoLog.is_open())
                 {
                     arquivoLog << "Ordem do Grafo: " << grafo.getTam() << endl;
                 }
                 break;
-            case 8:
+            case 8:// Se o usuário deseja visualizar o grau de um vértice
                 cout << "-- Grau de um vértice" << endl;
                 cout << "Digite o vertice: ";
                 cin >> verticeA;
+                // Se o usuário digitou um vértice inválido, informamos
                 if(!grafo.getGrau(verticeA, &gIn, &gOut))
                     cout << "Vértice inválido" << endl;
                 else
                 {
+                    // Se o grau de entrada retornado for negativo, este é um grafo normal e portanto exibimos apenas o grau geral do vértice
                     if(gIn < 0)
                     {
                         cout << "Grau: " << gOut << endl;
@@ -302,7 +324,7 @@ int main(int argc, char *argv[])
                             arquivoLog << "Grau de um vértice: " << verticeA << " ( " << gOut << " )" << endl;
                         }
                     }
-                    else
+                    else // Se o grau de entrada retornado for positivo, este é um digrafo e portanto exibimos o grau de entrada e o de saida
                     {
                         cout << "Grau de entrada: " << gIn << endl;
                         cout << "Grau de saída: " << gOut << endl;
@@ -313,7 +335,7 @@ int main(int argc, char *argv[])
                     }
                 }
                 break;
-            case 9:
+            case 9: // Se o usuário deseja verificar a K-regularidade do grafo, aguardamos K
                 cout << "-- K-regular" << endl;
                 cout << "K: ";
                 cin >> K;
@@ -324,12 +346,12 @@ int main(int argc, char *argv[])
                     arquivoLog << "Grafo " << K << "-regular: " << (T == 1 ? "Sim" : "Não") << endl;
                 }
                 break;
-            case 10:
+            case 10: // Se o usuário deseja visualizar a vizinhança aberta de um vértice, aguardamos a entrada de um vértice
                 cout << "-- Vizinhança aberta" << endl;
                 cout << "Vértice: ";
                 cin >> verticeA;
                 grafo.vizinhanca(verticeA, false, resultados);
-                if(arquivoLog.is_open())
+                if(arquivoLog.is_open()) // Colocamos a solução no log
                 {
                     arquivoLog << "Vizinhança aberta: ";
                     while(resultados.size() > 0)
@@ -341,7 +363,7 @@ int main(int argc, char *argv[])
                     arquivoLog << endl;
                 }
                 break;
-            case 11:
+            case 11:// Se o usuário deseja visualizar a vizinhança fechada de um vértice, aguardamos a entrada de um vértice
                 cout << "-- Vizinhança fechada" << endl;
                 cout << "Vértice: ";
                 cin >> verticeA;
@@ -358,7 +380,7 @@ int main(int argc, char *argv[])
                     arquivoLog << endl;
                 }
                 break;
-            case 12:
+            case 12:// Se o usuário deseja visualizar se o grafo é completo
                 cout << "-- Completo" << endl;
                 T = grafo.completo() ? 1 : 0;
                 cout << (T == 1 ? "Sim" : "Não")  << endl;
@@ -367,7 +389,7 @@ int main(int argc, char *argv[])
                     arquivoLog << "Grafo completo: " << (T == 1 ? "Sim" : "Não") << endl;
                 }
                 break;
-            case 13:
+            case 13:// Se o usuário deseja visualizar se o grafo é bipartido
                 cout << "-- Bipartido" << endl;
                 T = grafo.bipartido() ? 1 : 0;
                 cout << (T == 1 ? "Sim" : "Não")  << endl;
@@ -376,7 +398,7 @@ int main(int argc, char *argv[])
                     arquivoLog << "Grafo bipartido: " << (T == 1 ? "Sim" : "Não") << endl;
                 }
                 break;
-            case 14:
+            case 14:// Se o usuário deseja visualizar a sequencia de graus do grafo, obtemos e logamos
                 grafo.sequenciaGraus(resultados);
                 if(arquivoLog.is_open())
                 {
@@ -390,9 +412,11 @@ int main(int argc, char *argv[])
                     arquivoLog << endl;
                 }
                 break;
-            case 15:
+            case 15:// Se o usuário deseja visualizar a ordenação topológica do grafo
+                // Tentamos obter a ordenação
                 if(grafo.ordenacaoTopologica(resultados))
                 {
+                    // Se for possível, logamos
                     if(arquivoLog.is_open())
                     {
                         arquivoLog << "Ordenação topológica: ";
@@ -407,13 +431,14 @@ int main(int argc, char *argv[])
                 }
                 else
                 {
+                    // Se não foi possível obter a ordenação, logamos que é inválido
                     if(arquivoLog.is_open())
                     {
                         arquivoLog << "Ordenação topológica: Inválida" << endl;
                     }
                 }
                 break;
-            case 16:
+            case 16:// Se o usuário deseja visualizar o fecho transitivo direto de um vértice, aguardamos a entrada de um vértice
                 cout << "-- Fecho transitivo direto" << endl;
                 cout << "Vértice: ";
                 cin >> verticeA;
@@ -439,7 +464,7 @@ int main(int argc, char *argv[])
                     }
                 }
                 break;
-            case 17:
+            case 17:// Se o usuário deseja visualizar o fecho transitivo indireto de um vértice, aguardamos a entrada de um vértice
                 cout << "-- Fecho transitivo indireto" << endl;
                 cout << "Vértice: ";
                 cin >> verticeA;
@@ -465,132 +490,148 @@ int main(int argc, char *argv[])
                     }
                 }
                 break;
-            case 18:
+            case 18:// Se o usuário deseja obter uma AMG por kruskal, executamos o algorítmo
                 grafo.kruskal();
                 if(arquivoLog.is_open())
                 {
                     arquivoLog << "AGM por Kruskal" << endl;
                 }
                 break;
-            case 19:
+            case 19:// Se o usuário deseja obter uma AMG por Prim, executamos o algorítmo
                 grafo.prim();
                 if(arquivoLog.is_open())
                 {
                     arquivoLog << "AGM por Prim" << endl;
                 }
                 break;
-            case 20:
+            case 20:// Se o usuário deseja obter a distância mínima por Dijkstra, aguardamos a entrada de dois vértices
                 cout << "-- Caminho mínimo por Dijkstra" << endl;
                 cout << "Vértice A: ";
                 cin >> verticeA;
                 cout << "Vértice B: ";
                 cin >> verticeB;
                 D = grafo.dijkstra(verticeA, verticeB);
-                if(arquivoLog.is_open())
+                if(arquivoLog.is_open()) // Logamos a distância
                 {
                     arquivoLog << "Caminho mínimo por Dijkstra: " << D << endl;
                 }
                 break;
-            case 21:
+            case 21:// Se o usuário deseja obter a distância mínima por Floyd, aguardamos a entrada de dois vértices
                 cout << "-- Caminho mínimo por Floyd" << endl;
                 cout << "Vértice A: ";
                 cin >> verticeA;
                 cout << "Vértice B: ";
                 cin >> verticeB;
                 D = grafo.floyd(verticeA, verticeB);
-                if(arquivoLog.is_open())
+                if(arquivoLog.is_open()) // Logamos a distância
                 {
                     arquivoLog << "Caminho mínimo por Floyd: " << D << endl;
                 }
                 break;
-            case 22:
+            case 22: // Se o usuário deseja obter a solução gulosa
                 D = FLT_MAX;
                 secs = 0;
-                for(i = 0; i < loop; i++)
+                for(i = 0; i < loop; i++) // Executamos o algorimo a quantidade de vezes solicitada
                 {
                     cout << "Buscando solução gulosa " << (i+1) << "..." << endl;
+                    // Medimos o tempo de execução
                     now(start);
                     guloso.calcular(grafo, solucao);
                     now(stop);
                     cout << endl << "--- Solucao Gulosa ----" << endl;
                     cout << "Arquivo: " << arquivoNome << endl;
+                    // Imprimimos a solução encontrada
                     guloso.imprimir(solucao, grafo, best);
                     secs = printExecutionTime(start, stop);
+                    // Logamos para o arquivo CSV
                     log(arquivoCSV, "A1", arquivoNome, secs, solucao, grafo, best);
+                    // Armazenamos o melhor custo
                     if(solucao.custo < D || i == 0)
                         D = solucao.custo;
                 }
+                // Logamos o melhor custo
                 if(arquivoLog.is_open())
                 {
                     arquivoLog << "Algorítmo guloso: " << D << " em " << secs << "s" << endl;
                 }
                 break;
-            case 23:
+            case 23: // Se o usuário deseja obter a solução gulosa randomizada
                 D = FLT_MAX;
                 secs = 0;
-                for(i = 0; i < loop; i++)
+                for(i = 0; i < loop; i++)// Executamos o algorimo a quantidade de vezes solicitada
                 {
                     cout << "Buscando solução gulosa randomizada " << (i+1) << "..." << endl;
+                    // Medimos o tempo de execução
                     now(start);
                     guloso.calcularRandomizado(grafo, solucao, alpha, maxIte);
                     now(stop);
                     cout << endl << "--- Solucao Gulosa randomizada ----" << endl;
                     cout << "Arquivo: " << arquivoNome << endl;
+                    // Imprimimos a solução encontrada
                     guloso.imprimir(solucao, grafo, best);
                     secs = printExecutionTime(start, stop);
+                    // Logamos para o arquivo CSV
                     log(arquivoCSV, "A2", arquivoNome, secs, solucao, grafo, best);
+                    // Armazenamos o melhor custo
                     if(solucao.custo < D || i == 0)
                         D = solucao.custo;
                 }
+                // Logamos o melhor custo
                 if(arquivoLog.is_open())
                 {
                     arquivoLog << "Algorítmo guloso randomizado: " << D << " em " << secs << "s com alpha = " << alpha << endl;
                 }
                 break;
-            case 24:
+            case 24: // Se o usuário deseja obter a solução gulosa randomizada reativa
                 D = FLT_MAX;
                 secs = 0;
-                for(i = 0; i < loop; i++)
+                for(i = 0; i < loop; i++)// Executamos o algorimo a quantidade de vezes solicitada
                 {
                     cout << "Buscando solução gulosa randomizada reativa " << (i+1) << "..." << endl;
+                    // Medimos o tempo de execução
                     now(start);
                     guloso.calcularRandomizadoReativo(grafo, solucao, alphaReativo, nAlphas, bloco, maxIte);
                     now(stop);
                     cout << endl << "--- Solucao Gulosa randomizada reativa ----" << endl;
                     cout << "Arquivo: " << arquivoNome << endl;
+                    // Imprimimos a solução encontrada
                     guloso.imprimir(solucao, grafo, best);
                     secs = printExecutionTime(start, stop);
+                    // Logamos para o arquivo CSV
                     log(arquivoCSV, "A3", arquivoNome, secs, solucao, grafo, best);
+                    // Armazenamos o melhor custo
                     if(solucao.custo < D || i == 0)
                         D = solucao.custo;
                 }
+                // Logamos o melhor custo
                 if(arquivoLog.is_open())
                 {
                     arquivoLog << "Algorítmo guloso randomizado reativo: " << D << " em " << secs << "s" << endl;
                 }
                 break;
-            case 25:
+            case 25:// Se o usuário deseja desenhar o grafo, desenhamos em um arquivo chamado grafo.png e com uma possível solução
                 grafo.draw("grafo.png", &solucao);
                 break;
-            case 26:
+            case 26: // Se o usuário deseja salvar o grafo atual, aguarda o nome do arquivo de saída
                 cout << "-- Salvar grafo" <<endl;
                 cout << "Digite o nome do arquivo a salvar: ";
                 cin >> grafoArquivoSaida;
                 grafo.salvar(grafoArquivoSaida);
-                if(arquivoLog.is_open())
+                if(arquivoLog.is_open()) // Logamos que o grafo foi salvo
                 {
                     arquivoLog << "Grafo salvo: " << grafoArquivoSaida << endl;
                 }
-            case 0:
+            case 0: // Se o usuário desejar sair, para o loop do menu
                 break;
-            default:
+            default: // Se o usuário digitar algo inválido, ignoramos
                 cout << "Opção inválida" << endl;
                 break;
         }
         cout << endl << endl;
-        if(autoExit)
+        if(autoExit) // Se no menu foi passado um parâmetro para sair automaticamente, paramos o loop do menu
             break;
     }while(aux != 0);
+    // Se há um arquivo de log aberto, fechamos
     if(arquivoLog.is_open())
         arquivoLog.close();
     return 0;

@@ -431,8 +431,10 @@ bool Grafo::ordenacaoTopologica(list<int> &resultado)
         cout << "Este grafo não é um digrafo" << endl;
         return false;
     }
-    // Criamos duas listas
+    // Criamos duas listas, a lista L armazena os vértices ordenados e a lista S armazena os nós sem arestas de entrada
     list<Vertice*> S, L;
+    // Colocamos todos os vértices sem arestas de entrada em S
+    // Utilizamos a variável auxiliar 1 para contar a quantidade de arestas de entrada de cada vértice
     for(list<Vertice>::iterator A = inicio(); A != final(); A++)
     {
         A->aux1 = 0;
@@ -455,20 +457,25 @@ bool Grafo::ordenacaoTopologica(list<int> &resultado)
             S.push_front(&*A);
     }
 
+    // Para cada vértice sem arestas, removemos de S e colocamos em L
     while(S.size() > 0)
     {
         Vertice *n = *S.begin();
         S.erase(S.begin());
         L.push_back(n);
+        // Para cada aresta do vértice n, marcadmos esta aresta como visitada
         for(list<Aresta>::iterator aresta = n->inicio(); aresta != n->final(); aresta++)
         {
+            // Para o vértice da extremidade desta aresta, decrementamos a quantidade de arestas (aux1)
             aresta->aux1 = 1;
             aresta->getExtremidade()->aux1--;
+            // Se o vértice da extremidade não tem mais arestas, colocamos-o em S para ser analisado
             if(aresta->getExtremidade()->aux1 == 0)
                 S.push_front(aresta->getExtremidade());
         }
     }
 
+    // Se alguma aresta do grafo não foi visitada, significa que o grafo tem ao menos um ciclo e a ordenação topológica é invalida
     bool valid = true;
     for(list<Vertice>::iterator A = inicio(); A != final(); A++)
     {
@@ -505,23 +512,27 @@ bool Grafo::ordenacaoTopologica(list<int> &resultado)
 
 bool Grafo::fechoTransitivo(int V, bool direto, list<int> &resultado)
 {
+    // O fecho transitivo direto ou indireto só pode ser analisado em digrafos
     if(!digrafo)
     {
         cout << "Este grafo não é um digrafo" << endl;
         return false;
     }
+    // Se o vértice requisitado não existe, retornamos
     Vertice *v = busca(V);
     if(v == NULL)
     {
         cout << "Vértice inválido" << endl;
         return false;
     }
+    // Armazenamos o resultado do fecho transitivo direto ou indireto na lista de vértices S
     list<Vertice*> S;
     if(direto)
-        fechoTransitivoDireto(v, S);
+        fechoTransitivoDireto(v, S); // procura o conjunto de todos os vértices que podem ser atingidos por algum caminho iniciando em v
     else
-        fechoTransitivoIndireto(v, S);
+        fechoTransitivoIndireto(v, S); // procura o  conjunto de todos os vértices a partir dos quais se pode atingir v por algum caminho.
 
+    // Apresentamos o resultado
     resultado.clear();
     cout << "Conjunto: ";
     for(list<Vertice*>::iterator N = S.begin(); N != S.end(); N++)
@@ -535,9 +546,12 @@ bool Grafo::fechoTransitivo(int V, bool direto, list<int> &resultado)
 
 void Grafo::fechoTransitivoDireto(Vertice *v, list<Vertice*> &S)
 {
+    // Se o vértice já existe na solução, retornamos
     if(find(S.begin(), S.end(), v) != S.end())
         return;
+    // Adicionamos o vértice atual na solução
     S.push_back(v);
+    // Percorremos a lista de arestas deste vértice e analisamos os outros vértices que podem ser atingidos partindo de v
     for(list<Aresta>::iterator aresta = v->inicio(); aresta != v->final(); aresta++)
     {
         fechoTransitivoDireto(aresta->getExtremidade(), S);
@@ -546,9 +560,12 @@ void Grafo::fechoTransitivoDireto(Vertice *v, list<Vertice*> &S)
 
 void Grafo::fechoTransitivoIndireto(Vertice *v, list<Vertice*> &S)
 {
+    // Se o vértice já existe na solução, retornamos
     if(find(S.begin(), S.end(), v) != S.end())
         return;
+    // Adicionamos o vértice atual na solução
     S.push_back(v);
+    // Para todos os vértices do grafo, verificamos se existe algum que tem aresta para o vértice v
     for(list<Vertice>::iterator B = inicio(); B != final(); B++)
     {
         if(v == &*B)
@@ -557,7 +574,7 @@ void Grafo::fechoTransitivoIndireto(Vertice *v, list<Vertice*> &S)
         {
             if(aresta->getExtremidade() == v)
             {
-                fechoTransitivoIndireto(aresta->getOrigem(), S);
+                fechoTransitivoIndireto(aresta->getOrigem(), S); // Se houver uma aresta de algum vértice para v, analisamos a origem desta aresta
             }
         }
     }
@@ -565,35 +582,44 @@ void Grafo::fechoTransitivoIndireto(Vertice *v, list<Vertice*> &S)
 
 void Grafo::kruskal()
 {
+    // Criamos uma lista de todas as arestas do grafo
     list<Aresta*> S;
     for(list<Vertice>::iterator A = inicio(); A != final(); A++)
     {
+        // Cada vértice é uma árvore um único vértice
         A->aux1 = A->getInfo();
         for(list<Aresta>::iterator aresta = A->inicio(); aresta != A->final(); aresta++)
         {
-            aresta->aux1 = -1;
+            aresta->aux1 = -1; // Marcamos todas as arestas como não pertencentes à nenhum árvore
             S.push_back(&*aresta);
         }
     }
 
-
+    // Ordenamos as arestas por seus pesos
     S.sort(ordenaArestas);
+    // Para todas as arestas da lista
     for(list<Aresta*>::iterator s1 = S.begin(); s1 != S.end(); s1++)
     {
+        // Verificamos se a origem e a extremidade pertencem à mesma árvore
         Vertice *v1 = (*s1)->getOrigem();
         Vertice *v2 = (*s1)->getExtremidade();
+        // Se os dois vértices não estão na mesma árvore, une as árvores
         if(v1->aux1 != v2->aux1)
         {
+            // Faz com que esta aresta pertença àrvore do vértice de origem
             (*s1)->aux1 = v1->aux1;
+            // Faz com que cada aresta da árvore no vértice da extremidade pertença à arvore do vértice de destino
             for(list<Aresta*>::iterator s2 = S.begin(); s2 != S.end(); s2++)
             {
                 if((*s2)->aux1 == v2->aux1)
                     (*s2)->aux1 = v1->aux1;
             }
+            // Faz com que o vértice da extremidade pertença à árvore do vértice de origem
             v2->aux1 = v1->aux1;
         }
     }
 
+    // Mapeia todas as AGM encontradas
     map<int, list<Aresta*> > Fs;
     for(list<Aresta*>::iterator s = S.begin(); s != S.end(); s++)
     {
@@ -602,6 +628,7 @@ void Grafo::kruskal()
             Fs[(*s)->aux1].push_back(*s);
         }
     }
+    // Verifica se mais de uma AGM foi encontrada
     if(Fs.size() > 1)
     {
         cout << "Este grafo contém um floresta de AGMs" << endl;
@@ -609,6 +636,7 @@ void Grafo::kruskal()
     }
     bool showN = Fs.size() > 1;
     int n = 1;
+    // Exibe as AGMs
     for(map<int, list<Aresta*> >::iterator it = Fs.begin(); it != Fs.end(); ++it, n++)
     {
         if(showN)
@@ -618,33 +646,40 @@ void Grafo::kruskal()
         list<Aresta*> &A = it->second;
         for(list<Aresta*>::iterator a = A.begin(); a != A.end(); a++)
         {
-            cout << "( " << (*a)->getOrigem()->getInfo() << ", " << (*a)->getExtremidade()->getInfo() << " ), ";
+            cout << "( " << (*a)->getOrigem()->getInfo() << ", " << (*a)->getOrigem()->getPeso() << " ) ( " << (*a)->getExtremidade()->getInfo() << ", " << (*a)->getExtremidade()->getPeso() << " ) " << (*a)->getPeso() << endl;
         }
-        n++;
     }
 }
 
 void Grafo::prim()
 {
+    // Criamos um novo grafo para armazenar AGM por Prim
     Grafo solucao;
-    solucao.digrafo = digrafo;
+    solucao.digrafo = digrafo; // Se o grafo original for um digrafo, este também será
     Vertice *v = NULL;
+    // Criamos uma lista com todas as arestas do grafo
     list<Aresta*> S;
     for(list<Vertice>::iterator vertice = inicio(); vertice != final(); vertice++)
     {
+        // Selecionamos o vértice de maior grau
         vertice->aux1 = 0;
         if(v == NULL)
             v = &*vertice;
         else if(vertice->getGrau() > v->getGrau())
             v = &*vertice;
+        // Adicionamos todas as erestas na lista de arestas
         for(list<Aresta>::iterator aresta = vertice->inicio(); aresta != vertice->final(); aresta++)
         {
+            // Marcamos esta aresta como não visitada
             aresta->aux1 = 0;
             S.push_back(&*aresta);
         }
     }
+    // Adicionamos o vértice de maior grau na solução
     solucao.adicionarVertice(v->getInfo(), v->getPeso());
+    // Procuramos a AGM recursivamente
     prim(solucao, S);
+    // Exibimos a solução
     cout << "AGM" << endl;
     solucao.imprimir();
 }
@@ -653,47 +688,56 @@ void Grafo::prim(Grafo &solucao, list<Aresta*> &S)
 {
     Aresta* C = NULL;
     bool origem = false;
+    // Para todas as arestas da lista de arestas
     for(list<Aresta*>::iterator s = S.begin(); s != S.end(); s++)
     {
-        if((*s)->aux1 == 1)
+        if((*s)->aux1 == 1) // A a aresta já foi visitada, ignoramos a mesma
             continue;
         Vertice *v1 = solucao.busca((*s)->getOrigem()->getInfo());
         Vertice *v2 = solucao.busca((*s)->getExtremidade()->getInfo());
+        // Se os dois vértices que esta aresta liga não estão na solução, ignoramos a mesma
         if(v1 == NULL && v2 == NULL)
         {
             continue;
         }
-        else if(v1 != NULL && v2 != NULL)
+        else if(v1 != NULL && v2 != NULL) // Se os dois vértices que esta aresta liga estão na solução, marcamos-a como visitada
         {
             (*s)->aux1 = 1;
         }
-        else
+        else // Se apenas um dos vértices está na solução
         {
+            // Salva a indicação de qual vértice da aresta deve ser adicionada na solução
             origem = v1 != NULL;
+            // Selecionamos esta aresta para entrar na solução se não há outra selecionada ou se esta tem o peso menor que a atualmente selecionada
             if(C == NULL)
                 C = *s;
             else if((*s)->getPeso() < C->getPeso())
                 C = *s;
         }
     }
-    if(C == NULL)
+    if(C == NULL) // Se nenhuma aresta foi selecionada para entrar na solução, terminamos
         return;
-    C->aux1 = 1;
+    C->aux1 = 1; // Marcamos esta aresta como visitada
+    // Adicionamos na solução o vértice da aresta selecionada que não estava na solução
     if(origem)
         solucao.adicionarVertice(C->getOrigem()->getInfo(), C->getOrigem()->getPeso());
     else
         solucao.adicionarVertice(C->getExtremidade()->getInfo(), C->getExtremidade()->getPeso());
+    // Adicionamos a aresta selecionada na solução
     solucao.adicionarAresta(C->getOrigem()->getInfo(), C->getExtremidade()->getInfo(), C->getPeso());
+    // Procuramos a pŕoxima aresta a entrar na solução
     prim(solucao, S);
 }
 
 bool Grafo::ordenaArestas(Aresta *a, Aresta *b)
 {
-    return a->getPeso() > b->getPeso();
+    // Retorna true se a primeira aresta tiver o peso menor que a segunda
+    return a->getPeso() < b->getPeso();
 }
 
 float Grafo::dijkstra(int v1, int v2)
 {
+    // Para Dijkstra, verificamos se os vértices solicitados são validos
     Vertice *s = busca(v1);
     Vertice *e = busca(v2);
     if(s == NULL || e == NULL)
@@ -701,13 +745,17 @@ float Grafo::dijkstra(int v1, int v2)
         cout << "Vértices inválidos" << endl;
         return -1;
     }
+    // Atribuimos o custo inicial como máximo para todos os vértices, bem como indicamos que ele não foi visitado (aux1)
     for(list<Vertice>::iterator vertice = inicio(); vertice != final(); vertice++)
     {
         vertice->aux3 = FLT_MAX;
         vertice->aux1 = -1;
     }
+    // Indicamos que o vértice de partida foi visitado
     s->aux3 = 0;
+    // Começamos a caminhar no grafo saindo do vértice de partida
     dijkstra(s, 0);
+    // Exibimos a distância mínima do vértice de partida até o vértice de chegada
     cout << "Distância mínima: " << e->aux3 << endl;
     return e->aux3;
 }
@@ -716,24 +764,27 @@ void Grafo::dijkstra(Vertice *v, float l)
 {
     Vertice *n = NULL;
     float d;
+    // Para caminhar no grafo, verificamos todas as arestas que saem do vértice atual
     for(list<Aresta>::iterator aresta = v->inicio(); aresta != v->final(); aresta++)
     {
+        // Se a extremidade desta aresta não foi visitada, analisamos
         if(aresta->getExtremidade()->aux1 < 0)
         {
+            // O custo para ir até o vértice da extremidade será o mínimo entre o custo já conhecido até este vértice e custo da aresta mais o custo do caminho até o momento
             aresta->getExtremidade()->aux3 = min(aresta->getExtremidade()->aux3, aresta->getPeso() + l);
-            if(n == NULL)
+            if(n == NULL) // Se não há aresta selecionada para ser o próximo passo no grafo, selecionamos esta
             {
                 n = aresta->getExtremidade();
                 d = aresta->getPeso();
             }
-            else if(aresta->getPeso() < d)
+            else if(aresta->getPeso() < d) // Se a aresta tem um custo menor do que a selecionada como próximo passo anteriormente, selecionamos esta
             {
                 n = aresta->getExtremidade();
                 d = aresta->getPeso();
             }
         }
     }
-    if(n != NULL)
+    if(n != NULL) // Se alguma aresta foi selecionada para ser o próximo passo, marcamos esta aresta e caminhamos sobre ela
     {
         n->aux1 = 1;
         dijkstra(n, n->aux3);
@@ -742,6 +793,7 @@ void Grafo::dijkstra(Vertice *v, float l)
 
 float Grafo::floyd(int v1, int v2)
 {
+    // Verificamos se os vértices requisitados são válidos
     Vertice *s = busca(v1);
     Vertice *e = busca(v2);
     if(s == NULL || e == NULL)
@@ -752,6 +804,7 @@ float Grafo::floyd(int v1, int v2)
     float **A_1;
     float **A;
 
+    // Criamos a matriz de custos atual e a da iteração passada
     A_1 = new float*[getTam()];
     A   = new float*[getTam()];
     for(int i = 0; i < getTam(); i++)
@@ -764,21 +817,27 @@ float Grafo::floyd(int v1, int v2)
     int i2 = 0;
 
     int i = 0;
+    // Analisamos os vértices do grafo para preencher a matriz de custos inicial
     for(list<Vertice>::iterator a = inicio(); a != final(); a++, i++)
     {
+         // Se o vértice atual é o vértice de partida, o armazenamos o índice deste vértice (para não ter que procurar depois)
         if(a->getInfo() == s->getInfo())
             i1 = i;
+         // Se o vértice atual é o vértice de chegada, o armazenamos o índice deste vértice (para não ter que procurar depois)
         if(a->getInfo() == e->getInfo())
             i2 = i;
         int j = 0;
+        // Percorremos novamente o vetor de vértices
         for(list<Vertice>::iterator b = inicio(); b != final(); b++, j++)
         {
-
+            // Se os dois vértices forem iguais, o custo entre eles é zero
             if(i == j)
                 A_1[i][j] = 0;
             else
             {
+                // Se os vértices forem diferentes, eles tem um custo inicialmente infinito
                 A_1[i][j] = FLT_MAX;
+                // Se existe uma aresta entre estes vértices, o custo é o peso desta aresta
                 for(list<Aresta>::iterator aresta = b->inicio(); aresta != b->final(); aresta++)
                 {
                     if(aresta->getExtremidade()->getInfo() == a->getInfo())
@@ -788,15 +847,20 @@ float Grafo::floyd(int v1, int v2)
         }
     }
 
+    // Teremos uma iteração para cada vértice do grafo
     for(int k = 0; k < getTam(); k++)
     {
+        // Percorremos a matriz de custos
         for(int i = 0; i < getTam(); i++)
         {
             for(int j = 0; j < getTam(); j++)
             {
+                // O custo da célula atual será o custo mínimo entre o custo desta célula na iteração
+                // passada e o custo para se chegar até esta célula desde a iteração passada
                 A[i][j] = min(A_1[i][j], A_1[i][k] + A_1[k][j]);
             }
         }
+        // Copiamos a tabela de custos encontrada para a tabela de custos da geração passada
         for(int i = 0; i < getTam(); i++)
         {
             for(int j = 0; j < getTam(); j++)
@@ -806,20 +870,9 @@ float Grafo::floyd(int v1, int v2)
         }
     }
 
-    /*
-    cout << endl;
-    for(int i = 0; i < getTam(); i++)
-    {
-        for(int j = 0; j < getTam(); j++)
-        {
-            cout << A_1[i][j] << ",\t";
-        }
-        cout << endl;
-    }
-    */
-
-    float ret = A[i1][i2];
+    float ret = A[i1][i2]; // O custo do caminho entre os dois vértices será a célula da matriz que liga os dois vértices
     cout << "Distância mínima: " << ret << endl;
+    // Liberamos os rescursos utilizados nos cálculos
     for(int i = 0; i < getTam(); i++)
     {
         delete[] A_1[i];
@@ -831,30 +884,37 @@ float Grafo::floyd(int v1, int v2)
 }
 
 Vertice* Grafo::busca(int info){
+    // Para encontrar um vértice pela sua identificação, percorremos a lista de vértices e retornamos quando encontramos algum vértice com a identificação correta
     for (list<Vertice>::iterator it=this->vertices.begin() ; it != this->vertices.end(); ++it){
         if(it->getInfo() == info) {
             return &(*it);
         }
     }
+    // Retornamos nulo se não encontramos o vértice
     return NULL;
 }
 
 void Grafo::imprimir() {
+    // Imprimimos o grafo, para isso, imprimimos cada vértice
     for (list<Vertice>::iterator it=this->vertices.begin() ; it != this->vertices.end(); ++it){
         it->imprimir();
     }
 }
 
 list<Vertice>::iterator Grafo::inicio(){
+    // retornamos um iterador para o inicio da lista de vértices
     return this->vertices.begin();
 }
 
 list<Vertice>::iterator Grafo::final(){
+    // retornamos um iterador para o final da lista de vértices
     return this->vertices.end();
 }
 
 void Grafo::draw(string fileName, SolucaoGuloso *solucao)
 {
+    // Para desenhar o grafo, inicialmente criamos um arquivo no formato dot (utilizado pelo graphviz)
+    // Neste arquivo colocamos todas as informações do grafo atual, e se houver alguma solução a ser mostrada, marcamos os vértices e arestas que fazem parte da solução
     cout << "Criando .dot" << endl;
     stringstream ss;
     if(digrafo)
@@ -908,20 +968,23 @@ void Grafo::draw(string fileName, SolucaoGuloso *solucao)
     }
     ss << "}";
 
+    // Salvamos o arquivo no formato dot
     cout << "Renderizando" << endl;
     string dotFileName = fileName+".dot";
     ofstream dot(dotFileName.c_str());
     dot << ss.rdbuf();
     dot.close();
+    // Invocamos o graphviz para desenhar o grafo
     string command1 = "dot -x -Goverlap=scale -Tpng -o"+fileName+" "+dotFileName;
     int rc = system(command1.c_str());
-    if(rc != 0)
+    if(rc != 0) // Se o graphviz não está instalado, exibimos ajuda para instalar
     {
         cout << "GraphViz não instalado no sistema." << endl;
         cout << "Exemplo de instalação: sudo apt-get install graphviz" << endl;
         return;
     }
 
+    // Incocamos o software de visualização de imangens padrão para visualizar o grafo desenhado
     string command2 = "xdg-open "+fileName;
     rc = system(command2.c_str());
     if(rc != 0)

@@ -63,3 +63,75 @@ Grau de um vértice: 1 ( 0, 2 )
 Grau de um vértice: 2 ( 2, 1 )
 Tipo: Grafo
 Grau de um vértice: 2 ( 3 )
+
+Carregando: 
+
+Carregando: 
+AGM por Prim
+AGM por Kruskal
+
+Carregando: 
+
+Carregando: 
+AGM por Kruskal
+
+Carregando: 
+
+Carregando: 
+AGM por Kruskal
+
+Carregando: 
+
+Carregando: 
+AGM por Kruskal
+AGM por Prim
+
+Carregando: 
+
+Carregando: 
+AGM por Kruskal
+
+Carregando: 
+AGM por Kruskal
+AGM por Prim
+
+Carregando: 
+Adicionar vértice: 1 ( 1 )
+Adicionar vértice: 2 ( 2 )
+Adicionar vértice: 3 ( 3 )
+Adicionar vértice: 4 ( 4 )
+Adicionar vértice: 5 ( 5 )
+AGM por Prim
+AGM por Kruskal
+Adicionar aresta: 1 -> 2 ( 2 )
+AGM por Prim
+AGM por Kruskal
+Adicionar aresta: 3 -> 4 ( 3 )
+AGM por Prim
+AGM por Kruskal
+Adicionar aresta: 5 -> 2 ( 4 )
+AGM por Prim
+AGM por Kruskal
+
+Carregando: 
+
+Carregando: 
+AGM por Kruskal
+
+Carregando: 
+
+Carregando: 
+AGM por Kruskal
+AGM por Prim
+
+Carregando: 
+
+Carregando: 
+Algorítmo guloso randomizado reativo: 53 em 1.40336s
+Algorítmo guloso randomizado reativo: 53 em 1.44727s
+
+Carregando: 
+Algorítmo guloso randomizado reativo: 0 em 7.44e-07s
+
+Carregando: 
+Algorítmo guloso randomizado reativo: 53 em 1.42895s
