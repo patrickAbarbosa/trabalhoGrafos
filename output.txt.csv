@@ -1,0 +1,3 @@
+ALG, INST, t[s], alpha, custo, custo_total, percent_total, melhor_custo, relacao_melhor, iteracao_melhor, grafo_nos, solucao_nos, grafo_arestas, solucao_arestas
+A1, C2-A.dat, 0.00103117, 0, 59, 59, 100%, -1, 0%, 0, 500, 4, 625, 3
+A3, C2-A.dat, 1.41111, 0.15, 53, 59, 89.8305%, -1, 0%, 4, 500, 2, 625, 1

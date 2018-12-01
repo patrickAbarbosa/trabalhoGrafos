@@ -17,6 +17,7 @@
 
 using namespace std;
 
+// Conta espaços vazios em uma string
 int spaces(string &text)
 {
     int n = 0;
@@ -37,127 +38,192 @@ int spaces(string &text)
 }
 
 Grafo::Grafo(string diretorio, bool digrafo){
+    // Se no construtor do grafo for informado o arquivo, carrega-se este arquivo e configuramos o tipo do grafo
     carregar(diretorio, digrafo);
 }
 
-Grafo::Grafo()
+Grafo::Grafo(bool digrafo)
 {
+    // Iniciamos um grafo vazio do tipo grafo ou digrafo
     arestas = 0;
+    paperMode = false;
+    this->digrafo = digrafo;
 }
 
 Grafo::~Grafo(){
+    // Ao destruir o grafo, limpamos seus vértices e arestas
     vertices.clear();
+    arestas = 0;
 };
 
 bool Grafo::carregar(string diretorio, bool digrafo)
 {
-    cout << "Di: " << digrafo << endl;
+    // Antes de carregar um grafo, apagamos os vértices e arestas atuais
     vertices.clear();
     arestas = 0;
+    // Configuramos o tipo do grafo
     this->digrafo = digrafo;
+    // Abrimos o arquivo de leitura
     arquivo.open(diretorio.c_str());
-    if(!arquivo.is_open())
+    if(!arquivo.is_open()) // Se não for possível abrir o arquivo, retornamos
     {
         cout << "Nao foi possivel abrir o arquivo!" << endl;
         return false;
     }
-    else
+    else // Se foi possível abrir o arquivo
     {
-        string line;
-        bool nodeMode = true;
-        bool paperMode = false;
-        int n = 0;
-        while(!arquivo.eof())
+        /*
+            Iremos carregar arquivos de dois formatos diferentes, o tipo Artigo é o típo utilizado nos artigos,
+            o tipo Aula é o tipo utilizado nas instâncias das aulas
+        */
+        string line; // Esta string irá armazenar a linha atual do arquivo
+        bool nodeMode = true; // Para o tipo de arquivos Artigo, definimos se estamos na fase de carregar vértices ou arestas
+        bool paperMode = false; // Indica se o arquivo atual é do tipo Artigo ou Aula
+        int n = 0; // Quantidade de espaços vazios na linha atual
+        while(!arquivo.eof()) // Enquanto houver dados para ler no arquivo
         {
-            getline(arquivo, line);
-            if(line.size() == 0)
+            getline(arquivo, line); // Obtemos a próxima linha do arquivo
+            if(line.size() == 0) // Se a linha é vazia, ignoramos
                 continue;
-            if(line[0] == '#')
+            if(line[0] == '#') // Se a linha começar com # ela é um comentário, portanto, ignoramos
                 continue;
-            n = spaces(line);
-            if(line == "node")
+            n = spaces(line); // conta a quantidade de espaços na linha atual
+            if(line == "node") // Se a linha atual tiver o texto "node", as próximas linhas serão vértices e o arquivo é do tipo Artigo
             {
                 nodeMode = true;
                 paperMode = true;
             }
-            else if(line == "link")
+            else if(line == "link")  // Se a linha atual tiver o texto "link", as próximas linhas serão arestas e o arquivo é do tipo Artigo
             {
                 nodeMode = false;
                 paperMode = true;
             }
             else
             {
-                if(n == 0)
+                if(n == 0) // Se não houver espaços em branco na linha, ela é um número e o arquivo é do tipo Aula
                 {
                     paperMode = false;
+                    // Criamos a quantidade de nós requisitada no arquivo
                     int sz = atoi(line.c_str());
                     for(int k = 1; k <= sz; k++)
                         adicionarVertice(k, 0);
                 }
                 else
                 {
+                    // Criamos uma stream com a linha atual, assim podemos ler cada parte da string de forma mais simples
                     stringstream ss(line);
-                    if(paperMode == false)
+                    if(paperMode == false) // Se o arquivo é do tipo Aula
                     {
-                        if(n == 1)
+                        if(n == 1) // Se há 1 espaço vazio na linha, temos dois números e esta linha indica uma aresta não ponderada
                         {
                             int n1, n2;
-                            ss >> n1 >> n2;
+                            ss >> n1 >> n2; // Obtemos os vértices de origem e extremidade da aresta
                             adicionarAresta(n1, n2, 0);
                         }
-                        if(n == 2)
+                        else // Se há mais de 1 espaço vazio na linha, temos 3 ou mais números e esta linha indica uma aresta ponderada
                         {
                             int n1, n2;
                             float weight;
-                            ss >> n1 >> n2 >> weight;
-                            adicionarAresta(n1, n2, weight);
-                        }
-                        else
-                        {
-                            int n1, n2;
-                            float weight;
-                            ss >> n1 >> n2 >> weight;
+                            ss >> n1 >> n2 >> weight;// Obtemos os vértices de origem e extremidade da aresta, bem como seu peso
                             adicionarAresta(n1, n2, weight);
                         }
                     }
-                    else
+                    else // Se o arquivo é do tipo Artigo
                     {
-                        if(nodeMode)
+                        if(nodeMode) // Se devemos carregar um nó do arquivo
                         {
                             int id;
                             float h, type, weight;
-                            ss >> id >> h >> type >> weight;
-                            adicionarVertice(id, weight);
+                            ss >> id >> h >> type >> weight; // Carregamos a identificação, o parâmetro h, o tipo o peso.
+                            adicionarVertice(id, weight); // No nosso grafo só utilizamos a identificação e o peso
                         }
-                        else
+                        else // Se devemos carregar uma aresta do arquivo
                         {
                             int id, n1, n2;
                             float weight;
-                            ss >> id >> n1 >> n2 >> weight;
-                            adicionarAresta(n1, n2, weight);
+                            ss >> id >> n1 >> n2 >> weight; // Obtemos a identificação da aresta, o vértice inicial, o vértice final e o peso
+                            adicionarAresta(n1, n2, weight); // No nosso grafo só utilizamos o nó de início, final e o peso
                         }
                     }
                 }
             }
         }
+        // Depois de ler todo o arquivo, podemos fechá-lo
+        arquivo.close();
+        this->paperMode = paperMode;
+    }
+    return true;
+}
+
+bool Grafo::salvar(string diretorio)
+{
+    // Abrimos um arquivo de escrita
+    ofstream arquivo;
+    arquivo.open(diretorio.c_str());
+    if(!arquivo.is_open()) // Se não for possível abrir o arquivo, retornamos
+    {
+        cout << "Nao foi possivel abrir o arquivo!" << endl;
+        return false;
+    }
+    else // Se foi possível abrir o arquivo
+    {
+        // Se o grafo foi carregado no modo aula, escrevemos a quantidade de vértices no arquivo
+        if(!paperMode)
+        {
+            arquivo << getTam() << endl;
+        }
+        else // Se o grafo foi carregado no modo Artigo, escrevemos o peso e identificação de cada vértice, bem como os textos de identificação
+        {
+            arquivo << "node" << endl;
+            for (list<Vertice>::iterator it=this->vertices.begin() ; it != this->vertices.end(); it++)
+            {
+                arquivo << it->getInfo() << "\t0\t0\t" << it->getPeso() << endl;
+            }
+            arquivo << "link" << endl;
+        }
+        // Para cada vértice no grafo percorremos sua lista de arestas e escrevemos no arquivo
+        int n = 0;
+        for(list<Vertice>::iterator V = inicio(); V != final(); V++)
+        {
+            for(list<Aresta>::iterator aresta = V->inicio(); aresta != V->final(); aresta++)
+            {
+                if(aresta->hide)
+                    continue;
+                if(paperMode)
+                    arquivo << n << "\t" << V->getInfo() << "\t" << aresta->getExtremidade()->getInfo() << "\t" << aresta->getPeso() << endl;
+                else
+                    arquivo << V->getInfo() << "\t" << aresta->getExtremidade()->getInfo() << "\t" << aresta->getPeso() << endl;
+                n++;
+            }
+        }
+        // Fechamos o arquivo
         arquivo.close();
     }
     return true;
 }
 
 void Grafo::adicionarVertice(int info, float peso){
+    // Antes de adicionar um vértice ao grafo, verificamos se ele já existe
     if(busca(info) != NULL){
+        // Se o vértice já existe não fazemos nada
         return;
     }
+    // Criamos um novo vértice
     Vertice novoVertice;
+    // Configuramos a identificação do vértice
     novoVertice.setInfo(info);
+    // Configuramos o peso do vértice
     novoVertice.setPeso(peso);
+    // Adicionamos o vértice na lista de vértices do grafo
     this->vertices.push_front(novoVertice);
 }
 
 void Grafo::removerVertice(int info){
+    // Para remover um vértice do grafo, iteramos entre todos os vértices
     for (list<Vertice>::iterator it=this->vertices.begin() ; it != this->vertices.end();){
+        // Removemos todas as arestas de qualquer vértice que aponte para o vértice que desejamos remover
         it->removerAresta(info);
+        // Se o vértice atual for o que se deseja remover, o apagamos da lista
         if(it->getInfo() == info)
         {
             it = vertices.erase(it);
@@ -168,59 +234,117 @@ void Grafo::removerVertice(int info){
 }
 
 void Grafo::adicionarAresta(int infoA, int infoB, float peso){
+    // Para adicionar uma aresta ao grafo, inicialmente encontramos os vérticem com as identificações desejadas para a aresta
     Vertice *extremidade = busca(infoB);
     Vertice *origem = busca(infoA);
-    // infoB não encontrado
+    // Se um dos vértices não pode ser encontrado'então não é possível adicionar esta aresta, apenas retornamos
     if(extremidade == NULL || origem == NULL){
         return;
     }
+
+    // Adicionamos uma aresta do vértice de origem para o vértice da extremidade
+    origem->adicionarAresta(extremidade, peso);
+    // Se este grafo não é um digrafo, adicionamos uma aresta identica da extremidade para a origem, mas esta aresta não aparece quando imprimimos o grafo
     if(!digrafo)
         extremidade->adicionarAresta(origem, peso, true);
-    origem->adicionarAresta(extremidade, peso);
+    // Incrementamos a quantidade de arestas do grafo
     arestas++;
 }
 
 void Grafo::removerAresta(int infoA, int infoB){
-    busca(infoA)->removerAresta(infoB);
+    // Para remover uma aresta, encontramos o vértice desejado
+    Vertice *origem = busca(infoA);
+    if(origem == NULL) // Se o vértice não foi encontrado, retornamos
+        return;
+    // Removemos a aresta do vértice de origem para o vértice da extremidade
+    origem->removerAresta(infoB);
+    // Se o grafo não é um digrafo, devemos remover a aresta identica da extremidade para a origem
     if(!digrafo)
-        busca(infoB)->removerAresta(infoA);
+    {
+        // Encontramos o vértice da extremidade
+        Vertice *extremidade = busca(infoB);
+        if(extremidade != NULL) // Se o vértice da extremidade foi encontrado
+            extremidade->removerAresta(infoA); // Removemos a aresta da extremidade para a origem
+    }
+    // Decrementamos a quantidade de arestas
     arestas--;
 
 }
 unsigned int Grafo::getTam(){
+    // Retornamos a ordem do grafo utilizando o tamanho da lista de vétices do grafo
     return (unsigned  int) vertices.size();
 }
 
 unsigned int  Grafo::getGrau(int info){
-    return (unsigned int) busca(info)->getGrau();
+    // Para retornar o grau de um vértice, encontramos este vértice
+    Vertice *v = busca(info);
+    if(v == NULL)// Se o vértice não foi encontrado, retornamos um grau nulo
+        return 0;
+    // Retornamos o grau para o vértice encontrado
+    return (unsigned int) v->getGrau();
+}
+
+bool Grafo::getGrau(int info, int *gIn, int *gOut)
+{
+    // Para retornar o grau de um vértice, encontramos este vértice
+    Vertice *v = busca(info);
+    if(v == NULL)// Se o vértice não foi encontrado, retornamos falha
+        return false;
+    *gOut = v->getGrau();
+    if(!digrafo)
+        *gIn = -1;
+    else
+    {
+        int g = 0;
+        for(list<Vertice>::iterator B = inicio(); B != final(); B++)
+        {
+            for(list<Aresta>::iterator aresta = B->inicio(); aresta != B->final(); aresta++)
+            {
+                if(aresta->getExtremidade() == v)
+                {
+                    g++;
+                }
+            }
+        }
+        *gIn = g;
+    }
 }
 
 unsigned int Grafo::getArestas(){
+    // Retornamos a quantidade de arestas do grafo
     return (unsigned  int) arestas;
 }
 
 bool Grafo::kRegular(int k)
 {
+    // Para verificar se o grafo é K-regular, iteremos entre todos os vértices do grafo
     for(list<Vertice>::iterator vertice = inicio(); vertice != final(); vertice++)
     {
+        // Se o grau de qualquer vértice for diferente de K, ele não é K-regular
         if(vertice->getGrau() != k)
             return false;
     }
+    // Se nenhum vértice tem grau diferente de K, ele é K-regular
     return true;
 }
 
 void Grafo::vizinhanca(int info, bool fechada, list<int> &resultado)
 {
+    // Para verificar a vizinhança, encontramos o vértice desejado
     Vertice *v = busca(info);
-    if(v == NULL)
+    if(v == NULL) // Se o vértice não foi encontrado, retornamos
     {
         cout << "Vértice inválido" << endl;
         return;
     }
-    cout << "Vizinhança: ";
-    if(fechada)
-        cout << info << " ";
     resultado.clear();
+    cout << "Vizinhança: ";
+    if(fechada) // Se a vizinhança é fechada, o vértice faz parte da sua vizinhança
+    {
+        cout << info << " ";
+        resultado.push_back(info);
+    }
+    // Para cada aresta do vértice selecionado, sua extremidade faz parte de sua vizinhança
     for(list<Aresta>::iterator aresta = v->inicio(); aresta != v->final(); aresta++)
     {
         cout << ", " << aresta->getExtremidade()->getInfo();
@@ -231,10 +355,13 @@ void Grafo::vizinhanca(int info, bool fechada, list<int> &resultado)
 
 bool Grafo::completo()
 {
+    // Para um grafo completo, todos os nós devem ter o mesmo grau e ele deve ser igual à ordem do grafo subtraido de uma unidade
     int n = getTam();
     n--;
+    // Para cada vértice do grafo
     for(list<Vertice>::iterator vertice = inicio(); vertice != final(); vertice++)
     {
+        // Se o grau de qualquer vértice for diferente de n, este grafo não é completo
         if(vertice->getGrau() != n)
             return false;
     }
@@ -243,14 +370,17 @@ bool Grafo::completo()
 
 bool Grafo::bipartido()
 {
+    // Para verificar se o grafo é bipartido, utilizamos a variável auxiliar 1 do vértice para marcá-lo
     for(list<Vertice>::iterator vertice = inicio(); vertice != final(); vertice++)
         vertice->aux1 = -1;
 
+    // Percorremos toda a lista de vértices
     for(list<Vertice>::iterator vertice = inicio(); vertice != final(); vertice++)
     {
+        // Se o vértice atual não foi marcado ainda, marcamos ele e seus adjacentes com a marcação 0 recursivamente
         if(vertice->aux1 == -1)
         {
-            if(!bipartido(&*vertice, 0))
+            if(!bipartido(&*vertice, 0)) // Se na recursividade houve conflito entre a marcação de um nó, este grafo não é bipartido
                 return false;
         }
     }
@@ -259,15 +389,19 @@ bool Grafo::bipartido()
 
 bool Grafo::bipartido(Vertice *v, int proximo)
 {
+    // Marcamos o vértice atual com a marcação 'proximo'
     v->aux1 = proximo;
+    // Para cada aresta deste vértice
     for(list<Aresta>::iterator aresta = v->inicio(); aresta != v->final(); aresta++)
     {
+        // Se extremidade da aresta não foi marcada ainda
         if(aresta->getExtremidade()->aux1 == -1)
         {
-            if(!bipartido(aresta->getExtremidade(), !proximo))
+            // marcamos ele e seus adjacentes com o complementar de 'proximo' recursivamente
+            if(!bipartido(aresta->getExtremidade(), !proximo)) // Se na recursividade houve conflito entre a marcação de um nó, este grafo não é bipartido
                 return false;
         }
-        else if(aresta->getExtremidade()->aux1 == proximo)
+        else if(aresta->getExtremidade()->aux1 == proximo) // Se a extremidade já está marcada com a mesma marcação do vértice atual, o grafo'não é bipartido
         {
             return false;
         }
@@ -278,8 +412,10 @@ bool Grafo::bipartido(Vertice *v, int proximo)
 void Grafo::sequenciaGraus(list<int> &resultado)
 {
     resultado.clear();
+    // Para a sequência de graus, adicionamos a grau de cada vértice do grafo à uma lista
     for(list<Vertice>::iterator vertice = inicio(); vertice != final(); vertice++)
         resultado.push_back(vertice->getGrau());
+    // Ordenamos a lista de graus de forma à obter uma sequência do menor para o maior
     resultado.sort();
     cout << "Sequência de graus: ";
     for(list<int>::iterator grau = resultado.begin(); grau != resultado.end(); grau++)
@@ -289,11 +425,13 @@ void Grafo::sequenciaGraus(list<int> &resultado)
 
 bool Grafo::ordenacaoTopologica(list<int> &resultado)
 {
+    // Para obter a ordenação topológica, devemos ter obrigatóriamente um digrafo, portanto retornamos se este grafo não for um
     if(!digrafo)
     {
         cout << "Este grafo não é um digrafo" << endl;
         return false;
     }
+    // Criamos duas listas
     list<Vertice*> S, L;
     for(list<Vertice>::iterator A = inicio(); A != final(); A++)
     {

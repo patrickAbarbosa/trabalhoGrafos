@@ -1,0 +1,65 @@
+Algorítmo guloso: 59 em 0.00103117s
+Algorítmo guloso randomizado reativo: 53 em 1.41111s
+
+Carregando: 
+
+Carregando: 
+
+Carregando: 
+Adicionar vértice: 1 ( 1 )
+Adicionar vértice: 2 ( 2 )
+Imprimir Grafo
+Imprimir Grafo
+Adicionar aresta: 1 -> 2 ( 3 )
+Imprimir Grafo
+Remover aresta: 1 -> 2
+Imprimir Grafo
+
+Carregando: 
+
+Carregando: 
+
+Carregando: 
+Grafo salvo: gh.txt
+
+Carregando: 
+Grafo salvo: gh.txt
+
+Carregando: 
+
+Carregando: 
+
+Carregando: 
+
+Carregando: 
+Imprimir Grafo
+Tipo: Digrafo
+Imprimir Grafo
+
+Carregando: 
+
+Carregando: 
+Grafo salvo: gh.txt
+
+Carregando: 
+Imprimir Grafo
+Tipo: Digrafo
+Imprimir Grafo
+Grafo salvo: gh.txt
+
+Carregando: 
+
+Carregando: 
+Tipo: Digrafo
+Grau de um vértice: 1 ( 2, 2 )
+
+Carregando: 
+Tipo: Digrafo
+Grafo salvo: gh.txt
+
+Carregando: 
+Tipo: Digrafo
+Grau de um vértice: 1 ( 0, 2 )
+Grau de um vértice: 2 ( 2, 1 )
+Tipo: Grafo
+Grau de um vértice: 2 ( 3 )

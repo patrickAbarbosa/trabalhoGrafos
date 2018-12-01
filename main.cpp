@@ -151,6 +151,7 @@ int main(int argc, char *argv[])
             arquivoCSV << "ALG" << ", " << "INST" << ", " << "t[s]" << ", " << "alpha" << ", " << "custo" << ", " << "custo_total" << ", " << "percent_total" << ", " << "melhor_custo" << ", " << "relacao_melhor" << ", " << "iteracao_melhor" << ", " << "grafo_nos" << ", " << "solucao_nos" << ", " << "grafo_arestas" << ", " << "solucao_arestas" << endl;
         }
         arquivoLog.open(saida.c_str(), ios::app);
+        arquivoLog << endl << "Carregando: " << saidaNome << endl;
     }
 
     //cout << "Carregando " << arquivo << "..." << endl;
@@ -159,8 +160,9 @@ int main(int argc, char *argv[])
     Guloso guloso;
     SolucaoGuloso solucao;
 
-    int verticeA, verticeB, K, T;
+    int verticeA, verticeB, K, T, gIn, gOut;
     float peso, D;
+    string grafoArquivoSaida;
     double secs;
     list<int> resultados;
 
@@ -199,6 +201,7 @@ int main(int argc, char *argv[])
         cout << "[23] - Melhor solucao Gulosa Randomizada" << endl;
         cout << "[24] - Melhor solucao Gulosa Randomizada Reativa" << endl;
         cout << "[25] - Desenhar grafo" << endl;
+        cout << "[26] - Salvar grafo" << endl;
         cout << "[0] - Encerrar" << endl;
         if(direct)
         {
@@ -287,11 +290,27 @@ int main(int argc, char *argv[])
                 cout << "-- Grau de um vértice" << endl;
                 cout << "Digite o vertice: ";
                 cin >> verticeA;
-                K = grafo.getGrau(verticeA);
-                cout << "Grau: " << K << endl;
-                if(arquivoLog.is_open())
+                if(!grafo.getGrau(verticeA, &gIn, &gOut))
+                    cout << "Vértice inválido" << endl;
+                else
                 {
-                    arquivoLog << "Grau de um vértice: " << verticeA << " ( " << K << " )" << endl;
+                    if(gIn < 0)
+                    {
+                        cout << "Grau: " << gOut << endl;
+                        if(arquivoLog.is_open())
+                        {
+                            arquivoLog << "Grau de um vértice: " << verticeA << " ( " << gOut << " )" << endl;
+                        }
+                    }
+                    else
+                    {
+                        cout << "Grau de entrada: " << gIn << endl;
+                        cout << "Grau de saída: " << gOut << endl;
+                        if(arquivoLog.is_open())
+                        {
+                            arquivoLog << "Grau de um vértice: " << verticeA << " ( " << gIn << ", " << gOut << " )" << endl;
+                        }
+                    }
                 }
                 break;
             case 9:
@@ -553,6 +572,15 @@ int main(int argc, char *argv[])
             case 25:
                 grafo.draw("grafo.png", &solucao);
                 break;
+            case 26:
+                cout << "-- Salvar grafo" <<endl;
+                cout << "Digite o nome do arquivo a salvar: ";
+                cin >> grafoArquivoSaida;
+                grafo.salvar(grafoArquivoSaida);
+                if(arquivoLog.is_open())
+                {
+                    arquivoLog << "Grafo salvo: " << grafoArquivoSaida << endl;
+                }
             case 0:
                 break;
             default:
